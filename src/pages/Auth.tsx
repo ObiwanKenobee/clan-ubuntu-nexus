@@ -32,8 +32,31 @@ const Auth = () => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Redirect authenticated users to main dashboard
-          navigate('/');
+          // Get user role from metadata and redirect to appropriate dashboard
+          const userRole = session.user.user_metadata?.role;
+          
+          switch (userRole) {
+            case 'elder':
+              navigate('/elder-dashboard');
+              break;
+            case 'youth':
+              navigate('/youth-dashboard');
+              break;
+            case 'women':
+              navigate('/women-dashboard');
+              break;
+            case 'diaspora':
+              navigate('/diaspora-dashboard');
+              break;
+            case 'tech_steward':
+              navigate('/tech-dashboard');
+              break;
+            case 'civic':
+              navigate('/civic-dashboard');
+              break;
+            default:
+              navigate('/'); // Fallback to main dashboard
+          }
         }
       }
     );
@@ -44,7 +67,30 @@ const Auth = () => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        navigate('/');
+        const userRole = session.user.user_metadata?.role;
+        
+        switch (userRole) {
+          case 'elder':
+            navigate('/elder-dashboard');
+            break;
+          case 'youth':
+            navigate('/youth-dashboard');
+            break;
+          case 'women':
+            navigate('/women-dashboard');
+            break;
+          case 'diaspora':
+            navigate('/diaspora-dashboard');
+            break;
+          case 'tech_steward':
+            navigate('/tech-dashboard');
+            break;
+          case 'civic':
+            navigate('/civic-dashboard');
+            break;
+          default:
+            navigate('/');
+        }
       }
     });
 
