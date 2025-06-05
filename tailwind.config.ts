@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,43 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// African earth tones
+				ochre: {
+					50: '#fef9f2',
+					100: '#fef2e6',
+					200: '#fde1cc',
+					300: '#fbcca3',
+					400: '#f8a66f',
+					500: '#f5814c',
+					600: '#e25e2f',
+					700: '#c24521',
+					800: '#9d3820',
+					900: '#7e2f1e',
+				},
+				sienna: {
+					50: '#faf6f3',
+					100: '#f5ede6',
+					200: '#e9d8cc',
+					300: '#dabba6',
+					400: '#c59679',
+					500: '#b57c5b',
+					600: '#a7684f',
+					700: '#8b5543',
+					800: '#71463c',
+					900: '#5c3a32',
+				},
+				emerald: {
+					50: '#ecfdf5',
+					100: '#d1fae5',
+					200: '#a7f3d0',
+					300: '#6ee7b7',
+					400: '#34d399',
+					500: '#10b981',
+					600: '#059669',
+					700: '#047857',
+					800: '#065f46',
+					900: '#064e3b',
 				}
 			},
 			borderRadius: {
@@ -84,11 +122,33 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'tree-grow': {
+					'0%': {
+						transform: 'scale(0.8)',
+						opacity: '0.5'
+					},
+					'100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					}
+				},
+				'pulse-ubuntu': {
+					'0%, 100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '0.8',
+						transform: 'scale(1.05)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'tree-grow': 'tree-grow 0.8s ease-out',
+				'pulse-ubuntu': 'pulse-ubuntu 2s ease-in-out infinite'
 			}
 		}
 	},
