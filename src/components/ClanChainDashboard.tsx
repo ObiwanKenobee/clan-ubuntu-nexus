@@ -9,18 +9,36 @@ import { ClanVaultPanel } from './ClanVaultPanel';
 import { CommunityPulseDashboard } from './CommunityPulseDashboard';
 import { YouthGrowthTracker } from './YouthGrowthTracker';
 import { CulturalMemoryWall } from './CulturalMemoryWall';
+import { ClanEthicsLedger } from './ClanEthicsLedger';
+import { MeshSyncStatus } from './MeshSyncStatus';
+import { DiasporaBridgeModule } from './DiasporaBridgeModule';
+import { CivicConnector } from './CivicConnector';
 import { Home, Coins, Leaf, Globe, User } from 'lucide-react';
 
 const ClanChainDashboard = () => {
   const [activeTab, setActiveTab] = useState('clan-tree');
 
   const navigationItems = [
-    { id: 'clan-tree', icon: Home, label: 'Clan Tree' },
-    { id: 'vault', icon: Coins, label: 'Vault' },
-    { id: 'growth', icon: Leaf, label: 'Growth' },
-    { id: 'community', icon: Globe, label: 'Community' },
-    { id: 'memory', icon: User, label: 'Memory' },
+    { id: 'clan-tree', icon: Home, label: 'Clan Tree', component: ClanIDBuilder },
+    { id: 'vault', icon: Coins, label: 'Vault', component: ClanVaultPanel },
+    { id: 'growth', icon: Leaf, label: 'Growth', component: YouthGrowthTracker },
+    { id: 'community', icon: Globe, label: 'Community', component: CommunityPulseDashboard },
+    { id: 'memory', icon: User, label: 'Memory', component: CulturalMemoryWall },
   ];
+
+  const advancedModules = [
+    { id: 'ethics', label: 'Ethics Ledger', component: ClanEthicsLedger },
+    { id: 'sync', label: 'Mesh Sync', component: MeshSyncStatus },
+    { id: 'diaspora', label: 'Diaspora Bridge', component: DiasporaBridgeModule },
+    { id: 'civic', label: 'Civic Connector', component: CivicConnector },
+  ];
+
+  const allModules = [...navigationItems, ...advancedModules];
+
+  const getComponentForTab = (tabId: string) => {
+    const module = allModules.find(m => m.id === tabId);
+    return module?.component || ClanIDBuilder;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50">
@@ -51,38 +69,52 @@ const ClanChainDashboard = () => {
       <main className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Desktop Navigation */}
-          <TabsList className="hidden md:grid w-full grid-cols-5 mb-6 bg-white/60 backdrop-blur-sm">
-            {navigationItems.map((item) => (
-              <TabsTrigger
-                key={item.id}
-                value={item.id}
-                className="flex items-center space-x-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-              >
-                <item.icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{item.label}</span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="hidden md:block">
+            <TabsList className="grid w-full grid-cols-5 mb-4 bg-white/60 backdrop-blur-sm">
+              {navigationItems.map((item) => (
+                <TabsTrigger
+                  key={item.id}
+                  value={item.id}
+                  className="flex items-center space-x-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{item.label}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          <TabsContent value="clan-tree" className="animate-tree-grow">
-            <ClanIDBuilder />
-          </TabsContent>
+            {/* Advanced Modules */}
+            <TabsList className="grid w-full grid-cols-4 mb-6 bg-white/60 backdrop-blur-sm">
+              {advancedModules.map((module) => (
+                <TabsTrigger
+                  key={module.id}
+                  value={module.id}
+                  className="flex items-center space-x-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
+                >
+                  <span className="hidden sm:inline">{module.label}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
-          <TabsContent value="vault" className="animate-tree-grow">
-            <ClanVaultPanel />
-          </TabsContent>
+          {/* Mobile Navigation Tabs */}
+          <div className="md:hidden mb-6">
+            <TabsList className="grid w-full grid-cols-3 mb-4 bg-white/60 backdrop-blur-sm">
+              <TabsTrigger value="clan-tree">Core</TabsTrigger>
+              <TabsTrigger value="advanced">Advanced</TabsTrigger>
+              <TabsTrigger value="governance">Governance</TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="growth" className="animate-tree-grow">
-            <YouthGrowthTracker />
-          </TabsContent>
-
-          <TabsContent value="community" className="animate-tree-grow">
-            <CommunityPulseDashboard />
-          </TabsContent>
-
-          <TabsContent value="memory" className="animate-tree-grow">
-            <CulturalMemoryWall />
-          </TabsContent>
+          {/* Tab Content */}
+          {allModules.map((module) => {
+            const Component = module.component;
+            return (
+              <TabsContent key={module.id} value={module.id} className="animate-tree-grow">
+                <Component />
+              </TabsContent>
+            );
+          })}
         </Tabs>
       </main>
 
