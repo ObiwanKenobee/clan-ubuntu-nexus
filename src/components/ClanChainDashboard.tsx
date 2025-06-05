@@ -13,7 +13,8 @@ import { ClanEthicsLedger } from './ClanEthicsLedger';
 import { MeshSyncStatus } from './MeshSyncStatus';
 import { DiasporaBridgeModule } from './DiasporaBridgeModule';
 import { CivicConnector } from './CivicConnector';
-import { Home, Coins, Leaf, Globe, User } from 'lucide-react';
+import { Home, Coins, Leaf, Globe, User, LogIn } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ClanChainDashboard = () => {
   const [activeTab, setActiveTab] = useState('clan-tree');
@@ -56,6 +57,12 @@ const ClanChainDashboard = () => {
               </div>
             </div>
             <div className="flex items-center space-x-2">
+              <Link to="/auth">
+                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                  <LogIn className="w-4 h-4" />
+                  <span>AEGIS Login</span>
+                </Button>
+              </Link>
               <Badge className="elder-badge">Elder Status</Badge>
               <div className="w-8 h-8 bg-emerald-500 rounded-full animate-pulse" title="Sync Active">
                 <div className="w-2 h-2 bg-white rounded-full mx-auto mt-3"></div>
