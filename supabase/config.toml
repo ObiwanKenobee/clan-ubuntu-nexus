@@ -1,1 +1,11 @@
+
 project_id = "jklewwlnrlzomkaetjjo"
+
+[functions.clan-api]
+verify_jwt = false
+
+[functions.clan-analytics]
+verify_jwt = false
+
+[functions.clan-notifications]
+verify_jwt = false
