@@ -63,6 +63,12 @@ const ClanChainDashboard = () => {
                   <span>AEGIS Login</span>
                 </Button>
               </Link>
+              <Link to="/super-tech">
+                <Button size="sm" className="flex items-center space-x-2 bg-gradient-to-r from-primary to-accent">
+                  <Zap className="w-4 h-4" />
+                  <span>Super-Tech</span>
+                </Button>
+              </Link>
               <Badge className="elder-badge">Elder Status</Badge>
               <div className="w-8 h-8 bg-emerald-500 rounded-full animate-pulse" title="Sync Active">
                 <div className="w-2 h-2 bg-white rounded-full mx-auto mt-3"></div>
