@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, Phone, Mail, Users, Shield, Globe, Mic } from 'lucide-react';
+import { AlertCircle, Phone, Mail, Users, Shield, Globe, Mic, Languages } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -16,10 +17,12 @@ import { DiasporaAuth } from '@/components/auth/DiasporaAuth';
 import { TechStewardAuth } from '@/components/auth/TechStewardAuth';
 import { CivicAuth } from '@/components/auth/CivicAuth';
 import { LanguageSelector } from '@/components/ui/language-selector';
+import { ResponsiveContainer, ResponsiveGrid } from '@/components/ui/responsive-layout';
 import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
 import { ArchetypePersonalization } from '@/components/archetype/ArchetypePersonalization';
 import { VoiceInterface } from '@/components/voice/VoiceInterface';
 import { useLanguage, AFRICAN_LANGUAGES } from '@/contexts/LanguageContext';
+import { useResponsive } from '@/hooks/use-responsive';
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +31,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { translate, currentLanguage } = useLanguage();
+  const { isMobile, isTablet } = useResponsive();
   const [selectedArchetype, setSelectedArchetype] = useState('elder');
   const [showPersonalization, setShowPersonalization] = useState(false);
 
@@ -163,83 +167,93 @@ const Auth = () => {
 
   const handlePersonalization = (preferences: any) => {
     console.log('Personalization preferences:', preferences);
-    // Store preferences in localStorage or send to backend
     localStorage.setItem('user-preferences', JSON.stringify(preferences));
     setShowPersonalization(false);
   };
 
   const handleVoiceCommand = (command: string, language: string) => {
     console.log('Voice command received:', command, 'in', language);
-    // Process voice commands for accessibility
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl">
+    <div className={`min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 ${currentLanguage.rtl ? 'rtl' : 'ltr'}`}>
+      <ResponsiveContainer maxWidth="full" className="py-4">
         {/* Header with Language Selector */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 clan-gradient rounded-full flex items-center justify-center animate-pulse-ubuntu">
-                <span className="text-white font-bold text-2xl">🌳</span>
+        <div className={`text-center mb-6 ${isMobile ? 'mb-4' : 'mb-8'}`}>
+          <div className={`flex items-center ${isMobile ? 'flex-col space-y-4' : 'justify-between'} mb-4`}>
+            <div className={`flex items-center space-x-4 ${isMobile ? 'text-center' : ''}`}>
+              <div className="w-12 h-12 lg:w-16 lg:h-16 clan-gradient rounded-full flex items-center justify-center animate-pulse-ubuntu">
+                <span className="text-white font-bold text-xl lg:text-2xl">🌳</span>
               </div>
-              <div className="text-left">
-                <h1 className="text-3xl font-bold text-foreground">AEGIS ClanChain</h1>
-                <p className="text-muted-foreground">{translate('clan_dashboard')}</p>
+              <div className={isMobile ? 'text-center' : 'text-left'}>
+                <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-foreground`}>
+                  AEGIS ClanChain
+                </h1>
+                <p className="text-muted-foreground text-sm lg:text-base">
+                  {translate('clan_dashboard')}
+                </p>
               </div>
             </div>
-            <LanguageSelector />
+            <div className="flex items-center space-x-2">
+              <LanguageSelector />
+              <Badge variant="outline" className="text-xs">
+                <Languages className="w-3 h-3 mr-1" />
+                {AFRICAN_LANGUAGES.length}+ Languages
+              </Badge>
+            </div>
           </div>
           
           {/* Principles Banner */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-6">
+          <ResponsiveGrid 
+            cols={{ mobile: 2, tablet: 3, desktop: 5 }} 
+            gap={2} 
+            className="mb-6"
+          >
             <Badge variant="outline" className="text-xs p-2">Ancestral Identity</Badge>
             <Badge variant="outline" className="text-xs p-2">Role-Based Access</Badge>
             <Badge variant="outline" className="text-xs p-2">Consent-First</Badge>
             <Badge variant="outline" className="text-xs p-2">Trust-Weighted</Badge>
             <Badge variant="outline" className="text-xs p-2">Offline Ready</Badge>
-          </div>
+          </ResponsiveGrid>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Cultural Adaptations */}
-          <div className="lg:col-span-1">
-            <CulturalAdaptations archetype={selectedArchetype} />
-          </div>
+        {/* Cultural Features Grid */}
+        <ResponsiveGrid 
+          cols={{ mobile: 1, tablet: 2, desktop: 3 }} 
+          gap={6} 
+          className="mb-6"
+        >
+          <CulturalAdaptations archetype={selectedArchetype} />
           
-          {/* Voice Interface */}
-          <div className="lg:col-span-1">
-            <VoiceInterface
-              mode="command"
-              title="Voice Authentication"
-              onVoiceCommand={handleVoiceCommand}
+          <VoiceInterface
+            mode="command"
+            title="Voice Authentication"
+            onVoiceCommand={handleVoiceCommand}
+          />
+          
+          {showPersonalization ? (
+            <ArchetypePersonalization
+              archetype={selectedArchetype}
+              onPersonalize={handlePersonalization}
             />
-          </div>
-          
-          {/* Personalization */}
-          <div className="lg:col-span-1">
-            {showPersonalization ? (
-              <ArchetypePersonalization
-                archetype={selectedArchetype}
-                onPersonalize={handlePersonalization}
-              />
-            ) : (
-              <Card className="h-full">
-                <CardHeader>
-                  <CardTitle>Personalize Experience</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Customize your dashboard based on your role and cultural preferences
-                  </p>
-                  <Button onClick={() => setShowPersonalization(true)} className="w-full">
-                    Start Personalization
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+          ) : (
+            <Card className="h-full">
+              <CardHeader>
+                <CardTitle className={isMobile ? 'text-lg' : 'text-xl'}>
+                  Personalize Experience
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Customize your dashboard based on your role and cultural preferences
+                </p>
+                <Button onClick={() => setShowPersonalization(true)} className="w-full">
+                  Start Personalization
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </ResponsiveGrid>
 
         {/* Role Selection Tabs */}
         <Tabs 
@@ -247,21 +261,27 @@ const Auth = () => {
           className="w-full"
           onValueChange={setSelectedArchetype}
         >
-          <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 mb-6 bg-white/60 backdrop-blur-sm">
+          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6'} mb-6 bg-white/60 backdrop-blur-sm`}>
             {roleDefinitions.map((role) => (
               <TabsTrigger
                 key={role.id}
                 value={role.id}
-                className="flex flex-col items-center space-y-1 p-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                className={`flex flex-col items-center space-y-1 p-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground ${isMobile ? 'text-xs' : ''}`}
               >
-                <role.icon className="w-4 h-4" />
-                <span className="text-xs hidden sm:inline">{role.title.split(' ')[1]}</span>
+                <role.icon className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
+                <span className={`${isMobile ? 'text-xs' : 'text-xs hidden sm:inline'}`}>
+                  {role.title.split(' ')[1]}
+                </span>
               </TabsTrigger>
             ))}
           </TabsList>
 
           {/* Role Information Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <ResponsiveGrid 
+            cols={{ mobile: 1, tablet: 2, desktop: 3 }} 
+            gap={4} 
+            className="mb-6"
+          >
             {roleDefinitions.map((role) => (
               <Card key={role.id} className="bg-white/80 backdrop-blur-sm">
                 <CardHeader className="pb-3">
@@ -269,7 +289,9 @@ const Auth = () => {
                     <div className={`w-8 h-8 ${role.color} rounded-full flex items-center justify-center`}>
                       <role.icon className="w-4 h-4 text-white" />
                     </div>
-                    <CardTitle className="text-sm">{role.title}</CardTitle>
+                    <CardTitle className={isMobile ? 'text-sm' : 'text-sm'}>
+                      {role.title}
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -281,7 +303,7 @@ const Auth = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </ResponsiveGrid>
 
           {/* Authentication Forms */}
           <TabsContent value="elder">
@@ -312,13 +334,17 @@ const Auth = () => {
         {/* Innovation Features Footer */}
         <Card className="mt-6 bg-white/60 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="text-sm flex items-center space-x-2">
+            <CardTitle className={`${isMobile ? 'text-sm' : 'text-sm'} flex items-center space-x-2`}>
               <Mic className="w-4 h-4" />
               <span>Cultural & Accessibility Innovations</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <ResponsiveGrid 
+              cols={{ mobile: 1, tablet: 2, desktop: 3 }} 
+              gap={4} 
+              className="text-xs"
+            >
               <div>
                 <p><strong>🗣️ Multi-Language Voice:</strong> {AFRICAN_LANGUAGES.length}+ African languages</p>
                 <p><strong>🌍 Cultural Adaptation:</strong> Ubuntu, lunar calendars, oral traditions</p>
@@ -331,10 +357,10 @@ const Auth = () => {
                 <p><strong>📱 Offline Cultural Sync:</strong> SMS and USSD integration</p>
                 <p><strong>🕯️ Sacred Technology:</strong> Ritual-aware digital stewardship</p>
               </div>
-            </div>
+            </ResponsiveGrid>
           </CardContent>
         </Card>
-      </div>
+      </ResponsiveContainer>
     </div>
   );
 };

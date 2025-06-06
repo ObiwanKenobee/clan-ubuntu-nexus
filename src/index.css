@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&family=Noto+Sans:wght@300;400;500;700&family=Noto+Serif:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -84,6 +84,16 @@
     --sidebar-border: 20 20% 15%;
     --sidebar-ring: 26 85% 55%;
   }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] .ltr-content {
+    direction: ltr;
+    text-align: left;
+  }
 }
 
 @layer base {
@@ -93,16 +103,59 @@
 
   body {
     @apply bg-background text-foreground font-ubuntu;
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Responsive Typography */
+  h1 {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-xl sm:text-2xl lg:text-3xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg sm:text-xl lg:text-2xl font-medium;
+  }
+
+  /* Mobile-first responsive text */
+  .text-responsive {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .text-responsive-small {
+    @apply text-xs sm:text-sm;
+  }
+
+  /* Responsive spacing */
+  .spacing-responsive {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+
+  .spacing-responsive-small {
+    @apply p-2 sm:p-3 lg:p-4;
   }
 }
 
 @layer utilities {
   .font-ubuntu {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Ubuntu', 'Noto Sans', sans-serif;
   }
   
   .font-ubuntu-mono {
-    font-family: 'Ubuntu Mono', monospace;
+    font-family: 'Ubuntu Mono', 'Noto Sans', monospace;
+  }
+
+  .font-noto {
+    font-family: 'Noto Sans', 'Ubuntu', sans-serif;
+  }
+
+  .font-noto-serif {
+    font-family: 'Noto Serif', 'Ubuntu', serif;
   }
   
   .clan-gradient {
@@ -116,4 +169,120 @@
   .youth-badge {
     @apply bg-gradient-to-r from-emerald-400 to-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium;
   }
+
+  /* Responsive grid utilities */
+  .grid-responsive-1 {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .grid-responsive-2 {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
+  }
+
+  .grid-responsive-3 {
+    @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6;
+  }
+
+  /* Touch-friendly interactive elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Improved accessibility */
+  .focus-visible-enhanced {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Language-specific typography */
+  .arabic-text {
+    font-family: 'Noto Sans Arabic', 'Ubuntu', sans-serif;
+    direction: rtl;
+    text-align: right;
+  }
+
+  .ethiopic-text {
+    font-family: 'Noto Sans Ethiopic', 'Ubuntu', sans-serif;
+  }
+
+  .tifinagh-text {
+    font-family: 'Noto Sans Tifinagh', 'Ubuntu', sans-serif;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .contrast-enhanced {
+      @apply border-2 border-foreground;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-pulse-ubuntu {
+      animation: none;
+    }
+
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+
+    .print-friendly {
+      @apply text-black bg-white;
+    }
+  }
+}
+
+/* Custom scrollbar for better UX */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) hsl(var(--background));
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
+
+/* Animation for Ubuntu-inspired pulse */
+@keyframes pulse-ubuntu {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-ubuntu {
+  animation: pulse-ubuntu 2s ease-in-out infinite;
+}
+
+/* Responsive breakpoints helper */
+.responsive-debug {
+  @apply after:content-['mobile'] sm:after:content-['sm'] md:after:content-['md'] lg:after:content-['lg'] xl:after:content-['xl'] 2xl:after:content-['2xl'];
+  @apply after:fixed after:top-0 after:right-0 after:bg-red-500 after:text-white after:px-2 after:py-1 after:text-xs after:z-50;
 }
