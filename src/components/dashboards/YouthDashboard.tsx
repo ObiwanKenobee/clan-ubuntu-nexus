@@ -7,8 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Star, BookOpen, Coins, Camera, Award } from 'lucide-react';
 import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
 import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
+import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
+import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const YouthDashboard = () => {
+  const { translate } = useLanguage();
   const [todaysTasks] = useState([
     { id: 1, title: 'Help elder with weekly shopping', tokens: 5, completed: false, category: 'Elder Care' },
     { id: 2, title: 'Tutor younger cousin in Mathematics', tokens: 8, completed: true, category: 'Education' },
@@ -23,6 +27,11 @@ export const YouthDashboard = () => {
     trustScore: 85
   });
 
+  const handleVoiceCommand = (command: string, language: string) => {
+    console.log('Youth voice command:', command, language);
+    // Process youth-specific voice commands for task completion
+  };
+
   return (
     <BusinessModelProvider>
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-background to-primary-50 p-6">
@@ -34,7 +43,7 @@ export const YouthDashboard = () => {
                 <Users className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Youth Growth Hub</h1>
+                <h1 className="text-3xl font-bold text-foreground">{translate('youth_growth')}</h1>
                 <p className="text-muted-foreground">Earn Trust • Grow Identity • Build Legacy • Scale Impact</p>
               </div>
             </div>
@@ -43,6 +52,16 @@ export const YouthDashboard = () => {
               <Badge variant="outline">Level {growthStats.currentLevel}</Badge>
               <Badge variant="outline">{growthStats.totalTokens} 🪙 ClanTokens</Badge>
             </div>
+          </div>
+
+          {/* Cultural & Voice Integration */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CulturalAdaptations archetype="youth" />
+            <VoiceInterface
+              mode="command"
+              title="Voice Task Assistant"
+              onVoiceCommand={handleVoiceCommand}
+            />
           </div>
 
           {/* Business Model Integration */}

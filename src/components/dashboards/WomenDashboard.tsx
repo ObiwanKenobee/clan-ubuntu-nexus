@@ -6,8 +6,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Heart, Phone, Baby, Coins, AlertTriangle, Users, Camera } from 'lucide-react';
 import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
 import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
+import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
+import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const WomenDashboard = () => {
+  const { translate } = useLanguage();
   const [healthAlerts] = useState([
     { id: 1, type: 'Vaccination', message: 'Baby John vaccination due in 3 days', urgency: 'medium' },
     { id: 2, type: 'Pregnancy', message: 'Antenatal checkup scheduled for Friday', urgency: 'high' },
@@ -21,6 +25,11 @@ export const WomenDashboard = () => {
     pendingRequests: 2
   });
 
+  const handleVoiceCommand = (command: string, language: string) => {
+    console.log('Women voice command:', command, language);
+    // Process women-specific voice commands for health and family management
+  };
+
   return (
     <BusinessModelProvider>
       <div className="min-h-screen bg-gradient-to-br from-sienna-50 via-background to-pink-50 p-6">
@@ -32,7 +41,7 @@ export const WomenDashboard = () => {
                 <Heart className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Family Care Center</h1>
+                <h1 className="text-3xl font-bold text-foreground">{translate('family_care')}</h1>
                 <p className="text-muted-foreground">Sacred Stewards • Health Guardians • Community Backbone</p>
               </div>
             </div>
@@ -41,6 +50,16 @@ export const WomenDashboard = () => {
               <Badge variant="outline">Family Vault Access</Badge>
               <Badge variant="outline">Memory Guardian</Badge>
             </div>
+          </div>
+
+          {/* Cultural & Voice Integration */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CulturalAdaptations archetype="women" />
+            <VoiceInterface
+              mode="record"
+              title="Family Health Voice Log"
+              onVoiceCommand={handleVoiceCommand}
+            />
           </div>
 
           {/* Business Model Integration */}

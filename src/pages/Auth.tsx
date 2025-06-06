@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,11 @@ import { WomenAuth } from '@/components/auth/WomenAuth';
 import { DiasporaAuth } from '@/components/auth/DiasporaAuth';
 import { TechStewardAuth } from '@/components/auth/TechStewardAuth';
 import { CivicAuth } from '@/components/auth/CivicAuth';
+import { LanguageSelector } from '@/components/ui/language-selector';
+import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
+import { ArchetypePersonalization } from '@/components/archetype/ArchetypePersonalization';
+import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +27,9 @@ const Auth = () => {
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { translate, currentLanguage } = useLanguage();
+  const [selectedArchetype, setSelectedArchetype] = useState('elder');
+  const [showPersonalization, setShowPersonalization] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener
@@ -154,19 +161,34 @@ const Auth = () => {
     }
   ];
 
+  const handlePersonalization = (preferences: any) => {
+    console.log('Personalization preferences:', preferences);
+    // Store preferences in localStorage or send to backend
+    localStorage.setItem('user-preferences', JSON.stringify(preferences));
+    setShowPersonalization(false);
+  };
+
+  const handleVoiceCommand = (command: string, language: string) => {
+    console.log('Voice command received:', command, 'in', language);
+    // Process voice commands for accessibility
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
-        {/* Header */}
+      <div className="w-full max-w-6xl">
+        {/* Header with Language Selector */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-4 mb-4">
-            <div className="w-16 h-16 clan-gradient rounded-full flex items-center justify-center animate-pulse-ubuntu">
-              <span className="text-white font-bold text-2xl">🌳</span>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 clan-gradient rounded-full flex items-center justify-center animate-pulse-ubuntu">
+                <span className="text-white font-bold text-2xl">🌳</span>
+              </div>
+              <div className="text-left">
+                <h1 className="text-3xl font-bold text-foreground">AEGIS ClanChain</h1>
+                <p className="text-muted-foreground">{translate('clan_dashboard')}</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">AEGIS ClanChain</h1>
-              <p className="text-muted-foreground">Ethically Intelligent Access Design</p>
-            </div>
+            <LanguageSelector />
           </div>
           
           {/* Principles Banner */}
@@ -179,8 +201,52 @@ const Auth = () => {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Cultural Adaptations */}
+          <div className="lg:col-span-1">
+            <CulturalAdaptations archetype={selectedArchetype} />
+          </div>
+          
+          {/* Voice Interface */}
+          <div className="lg:col-span-1">
+            <VoiceInterface
+              mode="command"
+              title="Voice Authentication"
+              onVoiceCommand={handleVoiceCommand}
+            />
+          </div>
+          
+          {/* Personalization */}
+          <div className="lg:col-span-1">
+            {showPersonalization ? (
+              <ArchetypePersonalization
+                archetype={selectedArchetype}
+                onPersonalize={handlePersonalization}
+              />
+            ) : (
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle>Personalize Experience</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Customize your dashboard based on your role and cultural preferences
+                  </p>
+                  <Button onClick={() => setShowPersonalization(true)} className="w-full">
+                    Start Personalization
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+
         {/* Role Selection Tabs */}
-        <Tabs defaultValue="elder" className="w-full">
+        <Tabs 
+          defaultValue="elder" 
+          className="w-full"
+          onValueChange={setSelectedArchetype}
+        >
           <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 mb-6 bg-white/60 backdrop-blur-sm">
             {roleDefinitions.map((role) => (
               <TabsTrigger
@@ -248,20 +314,22 @@ const Auth = () => {
           <CardHeader>
             <CardTitle className="text-sm flex items-center space-x-2">
               <Mic className="w-4 h-4" />
-              <span>Authentication Innovations</span>
+              <span>Cultural & Accessibility Innovations</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               <div>
-                <p><strong>🔊 Voice Signature Recognition:</strong> Respects oral tradition</p>
-                <p><strong>🛡️ Ethical Risk Flagging:</strong> Consensus-based overrides</p>
-                <p><strong>📱 Offline Family Link:</strong> Text-based verification</p>
+                <p><strong>🗣️ Multi-Language Voice:</strong> {AFRICAN_LANGUAGES.length}+ African languages</p>
+                <p><strong>🌍 Cultural Adaptation:</strong> Ubuntu, lunar calendars, oral traditions</p>
               </div>
               <div>
-                <p><strong>🌟 RoleToken Engine:</strong> Evolving trust-based permissions</p>
-                <p><strong>🔒 Ethics-First Consent:</strong> Transparent data sharing</p>
-                <p><strong>🎭 Login-Ritual Feature:</strong> Cultural theme integration</p>
+                <p><strong>🎭 Archetype Personalization:</strong> Role-based interfaces</p>
+                <p><strong>🔊 Accessibility First:</strong> Voice navigation for all users</p>
+              </div>
+              <div>
+                <p><strong>📱 Offline Cultural Sync:</strong> SMS and USSD integration</p>
+                <p><strong>🕯️ Sacred Technology:</strong> Ritual-aware digital stewardship</p>
               </div>
             </div>
           </CardContent>

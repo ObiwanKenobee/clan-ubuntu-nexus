@@ -6,8 +6,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Globe, Coins, Video, Vote, Users, Heart, BookOpen, TrendingUp } from 'lucide-react';
 import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
 import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
+import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
+import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const DiasporaDashboard = () => {
+  const { translate } = useLanguage();
   const [clanUpdates] = useState([
     { type: 'Education', title: '5 students received bursaries this month', time: '2 days ago', impact: 'high' },
     { type: 'Health', title: 'New clinic opened in Nyanchwa', time: '1 week ago', impact: 'medium' },
@@ -20,6 +24,11 @@ export const DiasporaDashboard = () => {
     { title: 'Women\'s Cooperative Expansion', amount: 80000, raised: 30000, supporters: 12 }
   ]);
 
+  const handleVoiceCommand = (command: string, language: string) => {
+    console.log('Diaspora voice command:', command, language);
+    // Process diaspora-specific voice commands for remote participation
+  };
+
   return (
     <BusinessModelProvider>
       <div className="min-h-screen bg-gradient-to-br from-primary-50 via-background to-blue-50 p-6">
@@ -31,8 +40,8 @@ export const DiasporaDashboard = () => {
                 <Globe className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Diaspora Connection Hub</h1>
-                <p className="text-muted-foreground">Global Bridge • Remote Steward • Legacy Sponsor</p>
+                <h1 className="text-3xl font-bold text-foreground">{translate('diaspora_bridge')}</h1>
+                <p className="text-muted-foreground">Global Connector • Remote Supporter • Cultural Bridge</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -42,19 +51,87 @@ export const DiasporaDashboard = () => {
             </div>
           </div>
 
+          {/* Cultural & Voice Integration */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CulturalAdaptations archetype="diaspora" />
+            <VoiceInterface
+              mode="command"
+              title="Remote Participation Voice"
+              onVoiceCommand={handleVoiceCommand}
+            />
+          </div>
+
           {/* Business Model Integration */}
           <div className="mb-6">
             <TierUpgradeCard archetype="Diaspora Network" />
           </div>
 
-          <Tabs defaultValue="updates" className="w-full">
+          <Tabs defaultValue="overview" className="w-full">
             <TabsList className="grid w-full grid-cols-5 mb-6">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="updates">Clan Updates</TabsTrigger>
               <TabsTrigger value="support">Support Family</TabsTrigger>
               <TabsTrigger value="participate">Participate</TabsTrigger>
               <TabsTrigger value="invest">Invest & Vote</TabsTrigger>
               <TabsTrigger value="business">Sponsorship Model</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="overview" className="space-y-6">
+              {/* Clan Health Dashboard */}
+              <Card className="bg-gradient-to-r from-primary-100 to-blue-100 border-primary-200">
+                <CardContent className="pt-6">
+                  <h3 className="text-xl font-bold mb-4">Your Branch Performance</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">2nd</div>
+                      <p className="text-sm text-muted-foreground">Education Ranking</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-emerald-600">89%</div>
+                      <p className="text-sm text-muted-foreground">Youth Active</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-ochre-600">156</div>
+                      <p className="text-sm text-muted-foreground">Family Members</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-sienna-600">12</div>
+                      <p className="text-sm text-muted-foreground">Recent Births</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent Clan Updates */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <TrendingUp className="w-5 h-5 text-primary" />
+                    <span>Recent Clan Milestones</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {clanUpdates.map((update, index) => (
+                      <div key={index} className={`p-4 rounded-lg border-l-4 ${
+                        update.impact === 'high' ? 'border-green-500 bg-green-50' :
+                        update.impact === 'medium' ? 'border-blue-500 bg-blue-50' :
+                        'border-gray-500 bg-gray-50'
+                      }`}>
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <Badge variant="outline" className="mb-2">{update.type}</Badge>
+                            <p className="font-medium">{update.title}</p>
+                            <p className="text-sm text-muted-foreground">{update.time}</p>
+                          </div>
+                          <Button size="sm" variant="outline">View Details</Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             <TabsContent value="updates" className="space-y-6">
               {/* Clan Health Dashboard */}

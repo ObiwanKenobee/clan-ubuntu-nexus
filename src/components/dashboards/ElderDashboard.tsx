@@ -8,8 +8,12 @@ import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
 import { ServicePackagesGrid } from '@/components/business/ServicePackagesGrid';
 import { MissionMetrics } from '@/components/business/MissionMetrics';
 import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
+import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
+import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const ElderDashboard = () => {
+  const { translate } = useLanguage();
   const [pendingVotes, setPendingVotes] = useState([
     { id: 1, type: 'Youth Task', title: 'Approve Maria\'s school support', urgency: 'high' },
     { id: 2, type: 'Ethics Rule', title: 'New grazing land protocol', urgency: 'medium' },
@@ -22,6 +26,16 @@ export const ElderDashboard = () => {
     { type: 'Youth Progress', title: '5 tasks completed this week', time: '2 days ago' }
   ];
 
+  const handleVoiceCommand = (command: string, language: string) => {
+    console.log('Elder voice command:', command, language);
+    // Process elder-specific voice commands
+  };
+
+  const handleVoiceRecording = (audioBlob: Blob, transcript: string) => {
+    console.log('Elder voice recording:', transcript);
+    // Save elder wisdom recordings
+  };
+
   return (
     <BusinessModelProvider>
       <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 p-6">
@@ -33,7 +47,7 @@ export const ElderDashboard = () => {
                 <Shield className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">Elder Council Dashboard</h1>
+                <h1 className="text-3xl font-bold text-foreground">{translate('elder_council')}</h1>
                 <p className="text-muted-foreground">Sacred Digital Steward • Governance • Ethics • Legacy</p>
               </div>
             </div>
@@ -42,6 +56,17 @@ export const ElderDashboard = () => {
               <Badge variant="outline">Ethics Keeper</Badge>
               <Badge variant="outline">Voice Authentication</Badge>
             </div>
+          </div>
+
+          {/* Cultural & Voice Integration */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CulturalAdaptations archetype="elder" />
+            <VoiceInterface
+              mode="record"
+              title="Record Elder Wisdom"
+              onVoiceRecording={handleVoiceRecording}
+              onVoiceCommand={handleVoiceCommand}
+            />
           </div>
 
           {/* Business Model Integration */}
