@@ -231,6 +231,51 @@ export type Database = {
         }
         Relationships: []
       }
+      community_collaborations: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          domain: string
+          end_date: string | null
+          goals: Json | null
+          id: string
+          partner_org: string | null
+          project_name: string
+          start_date: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          domain: string
+          end_date?: string | null
+          goals?: Json | null
+          id?: string
+          partner_org?: string | null
+          project_name: string
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          domain?: string
+          end_date?: string | null
+          goals?: Json | null
+          id?: string
+          partner_org?: string | null
+          project_name?: string
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       community_insights: {
         Row: {
           content: string
@@ -1024,6 +1069,146 @@ export type Database = {
           nodes?: Json | null
           risk_score?: number | null
           title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      innovation_contributions: {
+        Row: {
+          content: string | null
+          contribution_type: string
+          created_at: string | null
+          description: string | null
+          feedback: Json | null
+          id: string
+          impact_estimate: number | null
+          journey_id: string
+          language: string | null
+          media_urls: string[] | null
+          region: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          contribution_type: string
+          created_at?: string | null
+          description?: string | null
+          feedback?: Json | null
+          id?: string
+          impact_estimate?: number | null
+          journey_id: string
+          language?: string | null
+          media_urls?: string[] | null
+          region?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          contribution_type?: string
+          created_at?: string | null
+          description?: string | null
+          feedback?: Json | null
+          id?: string
+          impact_estimate?: number | null
+          journey_id?: string
+          language?: string | null
+          media_urls?: string[] | null
+          region?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "innovation_contributions_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "innovation_journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      innovation_impact_metrics: {
+        Row: {
+          current_value: number
+          data_source: string | null
+          domain: string
+          id: string
+          last_updated: string | null
+          metric_name: string
+          region: string | null
+          target_value: number
+          unit: string
+          visualization_type: string | null
+        }
+        Insert: {
+          current_value: number
+          data_source?: string | null
+          domain: string
+          id?: string
+          last_updated?: string | null
+          metric_name: string
+          region?: string | null
+          target_value: number
+          unit: string
+          visualization_type?: string | null
+        }
+        Update: {
+          current_value?: number
+          data_source?: string | null
+          domain?: string
+          id?: string
+          last_updated?: string | null
+          metric_name?: string
+          region?: string | null
+          target_value?: number
+          unit?: string
+          visualization_type?: string | null
+        }
+        Relationships: []
+      }
+      innovation_journeys: {
+        Row: {
+          archetype: Database["public"]["Enums"]["innovation_archetype"]
+          completed_at: string | null
+          contributions: Json | null
+          domain: string
+          id: string
+          progress: number
+          stage: number
+          started_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          archetype: Database["public"]["Enums"]["innovation_archetype"]
+          completed_at?: string | null
+          contributions?: Json | null
+          domain: string
+          id?: string
+          progress?: number
+          stage?: number
+          started_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          archetype?: Database["public"]["Enums"]["innovation_archetype"]
+          completed_at?: string | null
+          contributions?: Json | null
+          domain?: string
+          id?: string
+          progress?: number
+          stage?: number
+          started_at?: string | null
           updated_at?: string | null
           user_id?: string
         }
@@ -4524,6 +4709,12 @@ export type Database = {
         | "healthcare"
         | "other"
       initiative_status: "planned" | "in_progress" | "completed" | "on_hold"
+      innovation_archetype:
+        | "healer"
+        | "seeker"
+        | "guardian"
+        | "weaver"
+        | "dreamer"
       integration_status: "active" | "inactive" | "error" | "pending"
       integration_type: "erp" | "crm" | "scm" | "hrm" | "custom"
       metric_type: "wildlife" | "supply_chain" | "sensor" | "collaboration"
@@ -4707,6 +4898,13 @@ export const Constants = {
         "other",
       ],
       initiative_status: ["planned", "in_progress", "completed", "on_hold"],
+      innovation_archetype: [
+        "healer",
+        "seeker",
+        "guardian",
+        "weaver",
+        "dreamer",
+      ],
       integration_status: ["active", "inactive", "error", "pending"],
       integration_type: ["erp", "crm", "scm", "hrm", "custom"],
       metric_type: ["wildlife", "supply_chain", "sensor", "collaboration"],

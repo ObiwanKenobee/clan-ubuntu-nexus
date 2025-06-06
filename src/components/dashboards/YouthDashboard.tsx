@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Star, BookOpen, Coins, Camera, Award } from 'lucide-react';
+import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
+import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
 
 export const YouthDashboard = () => {
   const [todaysTasks] = useState([
@@ -23,35 +24,42 @@ export const YouthDashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-background to-primary-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center animate-pulse-ubuntu">
-              <Users className="w-8 h-8 text-white" />
+    <BusinessModelProvider>
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-background to-primary-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center space-x-4 mb-4">
+              <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center animate-pulse-ubuntu">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">Youth Growth Hub</h1>
+                <p className="text-muted-foreground">Earn Trust • Grow Identity • Build Legacy • Scale Impact</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Youth Growth Hub</h1>
-              <p className="text-muted-foreground">Earn Trust • Grow Identity • Seek Opportunity</p>
+            <div className="flex items-center space-x-2">
+              <Badge className="bg-emerald-500">Task Achiever</Badge>
+              <Badge variant="outline">Level {growthStats.currentLevel}</Badge>
+              <Badge variant="outline">{growthStats.totalTokens} 🪙 ClanTokens</Badge>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge className="bg-emerald-500">Task Achiever</Badge>
-            <Badge variant="outline">Level {growthStats.currentLevel}</Badge>
-            <Badge variant="outline">{growthStats.totalTokens} 🪙 ClanTokens</Badge>
+
+          {/* Business Model Integration */}
+          <div className="mb-6">
+            <TierUpgradeCard archetype="Youth Growth" />
           </div>
-        </div>
 
-        <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
-            <TabsTrigger value="tasks">Today's Tasks</TabsTrigger>
-            <TabsTrigger value="growth">Growth Progress</TabsTrigger>
-            <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
-            <TabsTrigger value="memory">Add Memory</TabsTrigger>
-          </TabsList>
+          <Tabs defaultValue="tasks" className="w-full">
+            <TabsList className="grid w-full grid-cols-5 mb-6">
+              <TabsTrigger value="tasks">Today's Tasks</TabsTrigger>
+              <TabsTrigger value="growth">Growth Progress</TabsTrigger>
+              <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
+              <TabsTrigger value="memory">Add Memory</TabsTrigger>
+              <TabsTrigger value="business">Business Value</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="tasks" className="space-y-6">
+            <TabsContent value="tasks" className="space-y-6">
             {/* Growth Progress Card */}
             <Card className="bg-gradient-to-r from-emerald-100 to-green-100 border-emerald-200">
               <CardContent className="pt-6">
@@ -235,8 +243,70 @@ export const YouthDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
+
+            <TabsContent value="business" className="space-y-6">
+              {/* Youth Contribution to Clan Economy */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Contribution to Clan Growth</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="text-center p-4 bg-emerald-50 rounded-lg">
+                      <div className="text-2xl font-bold text-emerald-600">156</div>
+                      <p className="text-sm text-muted-foreground">Tasks Completed</p>
+                      <p className="text-xs text-muted-foreground">Value: $78</p>
+                    </div>
+                    <div className="text-center p-4 bg-primary-50 rounded-lg">
+                      <div className="text-2xl font-bold text-primary">23</div>
+                      <p className="text-sm text-muted-foreground">Cousins Mentored</p>
+                      <p className="text-xs text-muted-foreground">Impact Score: 89%</p>
+                    </div>
+                    <div className="text-center p-4 bg-ochre-50 rounded-lg">
+                      <div className="text-2xl font-bold text-ochre-600">12</div>
+                      <p className="text-sm text-muted-foreground">Rules Suggested</p>
+                      <p className="text-xs text-muted-foreground">Approved: 8</p>
+                    </div>
+                  </div>
+                  <div className="p-4 bg-gradient-to-r from-emerald-100 to-primary-100 rounded-lg">
+                    <h4 className="font-medium mb-2">Youth Leadership Track</h4>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      You're on track to become a Youth Ethics Council member
+                    </p>
+                    <Progress value={75} className="h-2" />
+                    <p className="text-xs text-muted-foreground mt-1">75% complete</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Service Package Participation */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Service Package Participation</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-emerald-50 rounded">
+                      <div>
+                        <p className="font-medium">Ethics-as-Code Studio</p>
+                        <p className="text-sm text-muted-foreground">Help design clan rules</p>
+                      </div>
+                      <Badge className="bg-emerald-500">Active</Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                      <div>
+                        <p className="font-medium">Community Vault Service</p>
+                        <p className="text-sm text-muted-foreground">Contribute to shared savings</p>
+                      </div>
+                      <Button size="sm">Join</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-    </div>
+    </BusinessModelProvider>
   );
 };
