@@ -19,7 +19,7 @@ import { LanguageSelector } from '@/components/ui/language-selector';
 import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
 import { ArchetypePersonalization } from '@/components/archetype/ArchetypePersonalization';
 import { VoiceInterface } from '@/components/voice/VoiceInterface';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, AFRICAN_LANGUAGES } from '@/contexts/LanguageContext';
 
 const Auth = () => {
   const [loading, setLoading] = useState(false);
