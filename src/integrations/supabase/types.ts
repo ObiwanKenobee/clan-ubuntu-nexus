@@ -9,6 +9,118 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_models: {
+        Row: {
+          accuracy_score: number | null
+          api_endpoint: string | null
+          created_at: string | null
+          created_by: string | null
+          deployment_url: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          model_type: string | null
+          name: string
+          organization_id: string | null
+          status: string | null
+          training_data_size: number | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          accuracy_score?: number | null
+          api_endpoint?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deployment_url?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          model_type?: string | null
+          name: string
+          organization_id?: string | null
+          status?: string | null
+          training_data_size?: number | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          accuracy_score?: number | null
+          api_endpoint?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deployment_url?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          model_type?: string | null
+          name?: string
+          organization_id?: string | null
+          status?: string | null
+          training_data_size?: number | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_models_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      analytics_dashboards: {
+        Row: {
+          created_at: string | null
+          dashboard_type: string | null
+          description: string | null
+          id: string
+          is_shared: boolean | null
+          layout: Json | null
+          name: string
+          organization_id: string | null
+          updated_at: string | null
+          user_id: string
+          widgets: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          dashboard_type?: string | null
+          description?: string | null
+          id?: string
+          is_shared?: boolean | null
+          layout?: Json | null
+          name: string
+          organization_id?: string | null
+          updated_at?: string | null
+          user_id: string
+          widgets?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          dashboard_type?: string | null
+          description?: string | null
+          id?: string
+          is_shared?: boolean | null
+          layout?: Json | null
+          name?: string
+          organization_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+          widgets?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_dashboards_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_metrics: {
         Row: {
           id: string
@@ -107,6 +219,65 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      blockchain_assets: {
+        Row: {
+          asset_type: string | null
+          blockchain: string | null
+          contract_address: string | null
+          created_at: string | null
+          created_by: string | null
+          current_price: number | null
+          id: string
+          market_cap: number | null
+          metadata: Json | null
+          name: string
+          organization_id: string | null
+          symbol: string
+          total_supply: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          asset_type?: string | null
+          blockchain?: string | null
+          contract_address?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_price?: number | null
+          id?: string
+          market_cap?: number | null
+          metadata?: Json | null
+          name: string
+          organization_id?: string | null
+          symbol: string
+          total_supply?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          asset_type?: string | null
+          blockchain?: string | null
+          contract_address?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_price?: number | null
+          id?: string
+          market_cap?: number | null
+          metadata?: Json | null
+          name?: string
+          organization_id?: string | null
+          symbol?: string
+          total_supply?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blockchain_assets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       carbon_footprint_data: {
         Row: {
@@ -497,6 +668,81 @@ export type Database = {
           widgets?: string[] | null
         }
         Relationships: []
+      }
+      developer_repositories: {
+        Row: {
+          collaborators: string[] | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          forks: number | null
+          framework: string | null
+          id: string
+          issues_count: number | null
+          language: string | null
+          metadata: Json | null
+          name: string
+          organization_id: string | null
+          project_id: string | null
+          repository_url: string | null
+          stars: number | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          collaborators?: string[] | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          forks?: number | null
+          framework?: string | null
+          id?: string
+          issues_count?: number | null
+          language?: string | null
+          metadata?: Json | null
+          name: string
+          organization_id?: string | null
+          project_id?: string | null
+          repository_url?: string | null
+          stars?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          collaborators?: string[] | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          forks?: number | null
+          framework?: string | null
+          id?: string
+          issues_count?: number | null
+          language?: string | null
+          metadata?: Json | null
+          name?: string
+          organization_id?: string | null
+          project_id?: string | null
+          repository_url?: string | null
+          stars?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "developer_repositories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "developer_repositories_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       esg_benchmarks: {
         Row: {
@@ -1315,6 +1561,45 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          action_url: string | null
+          category: string | null
+          created_at: string | null
+          id: string
+          message: string | null
+          metadata: Json | null
+          read: boolean | null
+          title: string
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          read?: boolean | null
+          title: string
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          category?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          read?: boolean | null
+          title?: string
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           billing_email: string | null
@@ -1780,6 +2065,68 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      projects: {
+        Row: {
+          budget: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          metadata: Json | null
+          name: string
+          organization_id: string | null
+          owner_id: string | null
+          priority: string | null
+          start_date: string | null
+          status: string | null
+          team_members: string[] | null
+          type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          budget?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          organization_id?: string | null
+          owner_id?: string | null
+          priority?: string | null
+          start_date?: string | null
+          status?: string | null
+          team_members?: string[] | null
+          type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          budget?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          organization_id?: string | null
+          owner_id?: string | null
+          priority?: string | null
+          start_date?: string | null
+          status?: string | null
+          team_members?: string[] | null
+          type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       referrals: {
         Row: {

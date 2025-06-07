@@ -13,7 +13,7 @@ import { ClanEthicsLedger } from './ClanEthicsLedger';
 import { MeshSyncStatus } from './MeshSyncStatus';
 import { DiasporaBridgeModule } from './DiasporaBridgeModule';
 import { CivicConnector } from './CivicConnector';
-import { Home, Coins, Leaf, Globe, User, LogIn } from 'lucide-react';
+import { Home, Coins, Leaf, Globe, User, LogIn, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ClanChainDashboard = () => {
