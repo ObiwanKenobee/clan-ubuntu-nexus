@@ -5,57 +5,61 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Building, Key, CreditCard } from 'lucide-react';
+import { Building, Scale, Users } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 export const CivicAuth = () => {
   const [formData, setFormData] = useState({
-    organization: '',
-    apiKey: '',
-    smartCardId: '',
-    authMethod: 'oauth'
+    email: '',
+    password: '',
+    govId: '',
+    jurisdiction: ''
   });
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const { toast } = useToast();
 
-  const handleOAuthLogin = async () => {
-    setLoading(true);
-    try {
-      // Simulate OAuth flow
-      setTimeout(() => {
-        setLoading(false);
-        toast({
-          title: "OAuth Authentication",
-          description: "Redirecting to government portal...",
-        });
-      }, 1000);
-    } catch (error) {
-      setLoading(false);
-      toast({
-        title: "OAuth Failed",
-        description: "Failed to connect to government portal",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleApiKeyAuth = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: `${formData.organization}@civic.portal`,
-        password: formData.apiKey,
-      });
+      if (isSignUp) {
+        const redirectUrl = `${window.location.origin}/`;
+        
+        const { error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            emailRedirectTo: redirectUrl,
+            data: {
+              role: 'civic_partner',
+              gov_id: formData.govId,
+              jurisdiction: formData.jurisdiction
+            }
+          }
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      toast({
-        title: "Civic Access Granted",
-        description: "Connected to ClanChain metrics portal",
-      });
+        toast({
+          title: "Civic Partnership Initiated",
+          description: "Bridging traditional and modern governance",
+        });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (error) throw error;
+
+        toast({
+          title: "Civic Portal Access",
+          description: "Connected to governance systems",
+        });
+      }
     } catch (error: any) {
       toast({
         title: "Authentication Failed",
@@ -71,104 +75,92 @@ export const CivicAuth = () => {
     <Card className="bg-white/90 backdrop-blur-sm max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Building className="w-5 h-5 text-muted-foreground" />
-          <span>Civic & NGO Portal</span>
+          <Building className="w-5 h-5 text-primary" />
+          <span>Civic Partnership</span>
         </CardTitle>
         <div className="flex items-center space-x-2">
-          <Badge variant="secondary">Government Access</Badge>
-          <Badge variant="outline">NGO Partner</Badge>
+          <Badge className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">Government Partner</Badge>
+          <Badge variant="outline">Policy Bridge</Badge>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <form onSubmit={handleAuth} className="space-y-4">
           <div>
-            <Label>Authentication Method</Label>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              <Button
-                variant={formData.authMethod === 'oauth' ? 'default' : 'outline'}
-                onClick={() => setFormData({ ...formData, authMethod: 'oauth' })}
-                className="w-full"
-              >
-                OAuth Portal
-              </Button>
-              <Button
-                variant={formData.authMethod === 'api' ? 'default' : 'outline'}
-                onClick={() => setFormData({ ...formData, authMethod: 'api' })}
-                className="w-full"
-              >
-                API Key
-              </Button>
-            </div>
+            <Label htmlFor="civic-email">Official Email</Label>
+            <Input
+              id="civic-email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="official@government.ke"
+              required
+            />
           </div>
 
-          {formData.authMethod === 'oauth' ? (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="organization">Organization</Label>
-                <Input
-                  id="organization"
-                  type="text"
-                  value={formData.organization}
-                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  placeholder="County Government / NGO Name"
-                  required
-                />
-              </div>
+          <div>
+            <Label htmlFor="civic-password">Password</Label>
+            <Input
+              id="civic-password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              placeholder="Secure government password"
+              required
+            />
+          </div>
 
-              <Button onClick={handleOAuthLogin} className="w-full" disabled={loading}>
-                {loading ? 'Connecting...' : 'Connect via Government Portal'}
-              </Button>
+          <div>
+            <Label htmlFor="gov-id">Government ID/Badge</Label>
+            <Input
+              id="gov-id"
+              type="text"
+              value={formData.govId}
+              onChange={(e) => setFormData({ ...formData, govId: e.target.value })}
+              placeholder="Official identification number"
+              required
+            />
+          </div>
+
+          {isSignUp && (
+            <div>
+              <Label htmlFor="jurisdiction">Jurisdiction/Department</Label>
+              <Input
+                id="jurisdiction"
+                type="text"
+                value={formData.jurisdiction}
+                onChange={(e) => setFormData({ ...formData, jurisdiction: e.target.value })}
+                placeholder="County, Ministry, or Department"
+                required
+              />
             </div>
-          ) : (
-            <form onSubmit={handleApiKeyAuth} className="space-y-4">
-              <div>
-                <Label htmlFor="civic-org">Organization ID</Label>
-                <Input
-                  id="civic-org"
-                  type="text"
-                  value={formData.organization}
-                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  placeholder="org.county.kenya.001"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="api-key">API Key</Label>
-                <Input
-                  id="api-key"
-                  type="password"
-                  value={formData.apiKey}
-                  onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
-                  placeholder="Enter secure API key"
-                  required
-                />
-              </div>
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Authenticating...' : 'Access Civic Dashboard'}
-              </Button>
-            </form>
           )}
 
-          <div className="text-center">
-            <div className="flex items-center space-x-2 justify-center mt-4">
-              <CreditCard className="w-4 h-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Smart Card Login Available</span>
-            </div>
-          </div>
-        </div>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Verifying...' : isSignUp ? 'Register Partnership' : 'Access Civic Tools'}
+          </Button>
 
-        <div className="mt-6 p-3 bg-muted/30 rounded-md">
+          <div className="text-center">
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-sm"
+            >
+              {isSignUp ? 'Existing partner? Sign In' : 'New partnership? Register'}
+            </Button>
+          </div>
+        </form>
+
+        <div className="mt-6 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-md">
           <div className="flex items-start space-x-2">
-            <Key className="w-4 h-4 text-muted-foreground mt-0.5" />
+            <Scale className="w-4 h-4 text-blue-600 mt-0.5" />
             <div className="text-xs">
-              <p><strong>Civic Portal Features:</strong></p>
+              <p><strong>Civic Integration Features:</strong></p>
               <ul className="list-disc list-inside space-y-1 mt-1">
-                <li>Read-only metrics and analytics</li>
-                <li>Funding opportunity submissions</li>
-                <li>Project verification and evidence</li>
-                <li>Social trust and conflict mapping</li>
+                <li>Legal framework compliance</li>
+                <li>Traditional law documentation</li>
+                <li>Policy recommendation engine</li>
+                <li>Community impact reports</li>
               </ul>
             </div>
           </div>

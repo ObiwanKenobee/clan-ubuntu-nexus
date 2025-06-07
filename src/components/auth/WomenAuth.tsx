@@ -5,43 +5,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Phone, Camera } from 'lucide-react';
+import { Heart, Users, Star } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 export const WomenAuth = () => {
   const [formData, setFormData] = useState({
-    phone: '',
-    smsCode: '',
-    elderProxy: '',
-    faceIdEnabled: false
+    email: '',
+    password: '',
+    circleInvite: '',
+    focusArea: ''
   });
-  const [smsCodeSent, setSmsCodeSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const { toast } = useToast();
-
-  const handleSendSMS = async () => {
-    setLoading(true);
-    try {
-      // Simulate SMS sending
-      setTimeout(() => {
-        setSmsCodeSent(true);
-        setLoading(false);
-        toast({
-          title: "SMS Sent",
-          description: `Verification code sent to ${formData.phone}`,
-        });
-      }, 1000);
-    } catch (error) {
-      setLoading(false);
-      toast({
-        title: "SMS Failed",
-        description: "Failed to send verification code",
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,15 +26,17 @@ export const WomenAuth = () => {
 
     try {
       if (isSignUp) {
+        const redirectUrl = `${window.location.origin}/`;
+        
         const { error } = await supabase.auth.signUp({
-          email: `${formData.phone}@women.clan`,
-          password: formData.smsCode + formData.elderProxy,
+          email: formData.email,
+          password: formData.password,
           options: {
+            emailRedirectTo: redirectUrl,
             data: {
               role: 'women',
-              phone: formData.phone,
-              elder_proxy: formData.elderProxy,
-              face_id_enabled: formData.faceIdEnabled
+              circle_invite: formData.circleInvite,
+              focus_area: formData.focusArea
             }
           }
         });
@@ -65,20 +44,20 @@ export const WomenAuth = () => {
         if (error) throw error;
 
         toast({
-          title: "Welcome, Sister",
-          description: "Your family care access is ready",
+          title: "Welcome to the Women's Circle",
+          description: "Your voice strengthens our community",
         });
       } else {
         const { error } = await supabase.auth.signInWithPassword({
-          email: `${formData.phone}@women.clan`,
-          password: formData.smsCode + formData.elderProxy,
+          email: formData.email,
+          password: formData.password,
         });
 
         if (error) throw error;
 
         toast({
-          title: "Welcome Back",
-          description: "Access to family health and memory tools",
+          title: "Welcome Back, Sister",
+          description: "Continue empowering our community",
         });
       }
     } catch (error: any) {
@@ -96,84 +75,68 @@ export const WomenAuth = () => {
     <Card className="bg-white/90 backdrop-blur-sm max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Heart className="w-5 h-5 text-sienna-600" />
-          <span>Women & Family Care</span>
+          <Heart className="w-5 h-5 text-primary" />
+          <span>Women's Circle</span>
         </CardTitle>
         <div className="flex items-center space-x-2">
-          <Badge className="bg-sienna-500">Health Keeper</Badge>
-          <Badge variant="outline">Memory Guardian</Badge>
+          <Badge className="bg-gradient-to-r from-pink-500 to-rose-500 text-white">Community Pillar</Badge>
+          <Badge variant="outline">Wisdom Keeper</Badge>
         </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleAuth} className="space-y-4">
           <div>
-            <Label htmlFor="women-phone">Phone Number</Label>
-            <div className="flex space-x-2">
-              <Input
-                id="women-phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+254700123456"
-                required
-              />
-              <Button
-                type="button"
-                onClick={handleSendSMS}
-                disabled={!formData.phone || smsCodeSent || loading}
-                className="whitespace-nowrap"
-              >
-                <Phone className="w-4 h-4 mr-1" />
-                {smsCodeSent ? 'Sent' : 'Send SMS'}
-              </Button>
-            </div>
+            <Label htmlFor="women-email">Email Address</Label>
+            <Input
+              id="women-email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="sister@community.org"
+              required
+            />
           </div>
 
-          {smsCodeSent && (
+          <div>
+            <Label htmlFor="women-password">Password</Label>
+            <Input
+              id="women-password"
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              placeholder="Enter secure password"
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="circle-invite">Circle Invitation Code</Label>
+            <Input
+              id="circle-invite"
+              type="text"
+              value={formData.circleInvite}
+              onChange={(e) => setFormData({ ...formData, circleInvite: e.target.value })}
+              placeholder="Provided by women's group leader"
+              required
+            />
+          </div>
+
+          {isSignUp && (
             <div>
-              <Label htmlFor="women-sms">SMS Verification Code</Label>
+              <Label htmlFor="focus-area">Primary Focus Area</Label>
               <Input
-                id="women-sms"
+                id="focus-area"
                 type="text"
-                value={formData.smsCode}
-                onChange={(e) => setFormData({ ...formData, smsCode: e.target.value })}
-                placeholder="Enter SMS code"
-                maxLength={6}
+                value={formData.focusArea}
+                onChange={(e) => setFormData({ ...formData, focusArea: e.target.value })}
+                placeholder="Healthcare, Education, Business, etc."
                 required
               />
             </div>
           )}
 
-          {isSignUp && (
-            <>
-              <div>
-                <Label htmlFor="elder-proxy">Elder Proxy (Optional)</Label>
-                <Input
-                  id="elder-proxy"
-                  type="text"
-                  value={formData.elderProxy}
-                  onChange={(e) => setFormData({ ...formData, elderProxy: e.target.value })}
-                  placeholder="Elder name for verification support"
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="face-id"
-                  checked={formData.faceIdEnabled}
-                  onChange={(e) => setFormData({ ...formData, faceIdEnabled: e.target.checked })}
-                />
-                <Label htmlFor="face-id" className="flex items-center space-x-2">
-                  <Camera className="w-4 h-4" />
-                  <span>Enable Assisted Face ID (Optional)</span>
-                </Label>
-              </div>
-            </>
-          )}
-
-          <Button type="submit" className="w-full" disabled={loading || !smsCodeSent}>
-            {loading ? 'Authenticating...' : isSignUp ? 'Join Family Network' : 'Access Family Tools'}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Connecting...' : isSignUp ? 'Join the Circle' : 'Enter Sacred Space'}
           </Button>
 
           <div className="text-center">
@@ -183,21 +146,21 @@ export const WomenAuth = () => {
               onClick={() => setIsSignUp(!isSignUp)}
               className="text-sm"
             >
-              {isSignUp ? 'Already registered? Sign In' : 'New member? Register'}
+              {isSignUp ? 'Already part of the circle? Sign In' : 'New sister? Join Us'}
             </Button>
           </div>
         </form>
 
-        <div className="mt-6 p-3 bg-sienna-50 rounded-md">
+        <div className="mt-6 p-3 bg-gradient-to-r from-pink-50 to-rose-50 rounded-md">
           <div className="flex items-start space-x-2">
-            <Heart className="w-4 h-4 text-sienna-600 mt-0.5" />
+            <Star className="w-4 h-4 text-pink-600 mt-0.5" />
             <div className="text-xs">
-              <p><strong>Family Care Features:</strong></p>
+              <p><strong>Women's Empowerment:</strong></p>
               <ul className="list-disc list-inside space-y-1 mt-1">
-                <li>Health alerts and vaccination tracking</li>
-                <li>Shared family vault access</li>
-                <li>Birth and marriage record keeping</li>
-                <li>Safe reporting channels</li>
+                <li>Health & wellness programs</li>
+                <li>Economic empowerment initiatives</li>
+                <li>Child & family support systems</li>
+                <li>Leadership development opportunities</li>
               </ul>
             </div>
           </div>

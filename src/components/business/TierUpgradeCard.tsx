@@ -3,68 +3,97 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Users, Globe } from 'lucide-react';
-import { useBusinessModel, ClanTier } from '@/contexts/BusinessModelContext';
+import { Progress } from '@/components/ui/progress';
+import { TrendingUp, Users, Database, Zap } from 'lucide-react';
 
 interface TierUpgradeCardProps {
-  archetype: string;
+  currentTier: string;
+  usage: {
+    members: { current: number; limit: number };
+    storage: { current: number; limit: number };
+    disputes: { current: number; limit: number };
+  };
 }
 
-export const TierUpgradeCard: React.FC<TierUpgradeCardProps> = ({ archetype }) => {
-  const { currentTier, tierFeatures, upgradeTier } = useBusinessModel();
-
-  const tierInfo = {
-    seed: { icon: Crown, color: 'bg-emerald-500', price: 'Free' },
-    clan: { icon: Users, color: 'bg-primary', price: '$5-10/month' },
-    federation: { icon: Globe, color: 'bg-ochre-500', price: '$50-100/month' }
+export const TierUpgradeCard: React.FC<TierUpgradeCardProps> = ({ currentTier, usage }) => {
+  const getUsagePercentage = (current: number, limit: number) => {
+    return Math.min((current / limit) * 100, 100);
   };
 
+  const shouldShowUpgrade = () => {
+    return Object.values(usage).some(metric => 
+      getUsagePercentage(metric.current, metric.limit) > 80
+    );
+  };
+
+  if (!shouldShowUpgrade()) {
+    return null;
+  }
+
   return (
-    <Card className="bg-gradient-to-r from-primary/10 to-emerald/10">
+    <Card className="border-amber-200 bg-amber-50">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Crown className="w-5 h-5 text-ochre-500" />
-          <span>Clan Tier: {currentTier.charAt(0).toUpperCase() + currentTier.slice(1)}</span>
+          <TrendingUp className="w-5 h-5 text-amber-600" />
+          <span>Upgrade Recommended</span>
         </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          {Object.entries(tierInfo).map(([tier, info]) => {
-            const Icon = info.icon;
-            const isActive = currentTier === tier;
-            return (
-              <div
-                key={tier}
-                className={`p-3 rounded-lg border-2 ${
-                  isActive ? 'border-primary bg-primary/10' : 'border-gray-200'
-                }`}
-              >
-                <div className="flex items-center space-x-2 mb-2">
-                  <Icon className="w-4 h-4" />
-                  <span className="font-medium capitalize">{tier}</span>
-                  <Badge className={info.color}>{info.price}</Badge>
-                </div>
-                <ul className="text-sm space-y-1">
-                  {tierFeatures[tier as ClanTier].map((feature, index) => (
-                    <li key={index} className="text-muted-foreground">• {feature}</li>
-                  ))}
-                </ul>
-                {!isActive && (
-                  <Button
-                    size="sm"
-                    className="mt-2 w-full"
-                    onClick={() => upgradeTier(tier as ClanTier)}
-                  >
-                    Upgrade
-                  </Button>
-                )}
-              </div>
-            );
-          })}
+        <div className="flex items-center space-x-2">
+          <Badge variant="outline">Current: {currentTier}</Badge>
+          <Badge className="bg-amber-600">Near Limits</Badge>
         </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          Perfect for {archetype} activities and community governance
+          Your clan is growing! Consider upgrading to unlock more features and capacity.
         </p>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Users className="w-4 h-4 text-blue-600" />
+              <span className="text-sm">Members</span>
+            </div>
+            <span className="text-sm font-medium">
+              {usage.members.current}/{usage.members.limit}
+            </span>
+          </div>
+          <Progress value={getUsagePercentage(usage.members.current, usage.members.limit)} />
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Database className="w-4 h-4 text-green-600" />
+              <span className="text-sm">Storage</span>
+            </div>
+            <span className="text-sm font-medium">
+              {usage.storage.current}GB/{usage.storage.limit}GB
+            </span>
+          </div>
+          <Progress value={getUsagePercentage(usage.storage.current, usage.storage.limit)} />
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Zap className="w-4 h-4 text-purple-600" />
+              <span className="text-sm">Monthly Disputes</span>
+            </div>
+            <span className="text-sm font-medium">
+              {usage.disputes.current}/{usage.disputes.limit}
+            </span>
+          </div>
+          <Progress value={getUsagePercentage(usage.disputes.current, usage.disputes.limit)} />
+        </div>
+
+        <div className="pt-4 space-y-2">
+          <Button className="w-full">
+            Upgrade to Premium
+          </Button>
+          <Button variant="outline" className="w-full">
+            Compare Plans
+          </Button>
+        </div>
+
+        <div className="text-xs text-muted-foreground">
+          <p>✓ Instant upgrade • ✓ No data migration • ✓ 30-day guarantee</p>
+        </div>
       </CardContent>
     </Card>
   );
