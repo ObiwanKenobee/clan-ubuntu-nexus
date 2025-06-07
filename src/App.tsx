@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { BusinessModelProvider } from "@/contexts/BusinessModelContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -15,31 +16,41 @@ import WomenDashboard from "./pages/WomenDashboard";
 import DiasporaDashboard from "./pages/DiasporaDashboard";
 import SuperTechDashboard from "./pages/SuperTechDashboard";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 3,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <BusinessModelProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/elder-dashboard" element={<ElderDashboard />} />
-              <Route path="/youth-dashboard" element={<YouthDashboard />} />
-              <Route path="/women-dashboard" element={<WomenDashboard />} />
-              <Route path="/diaspora-dashboard" element={<DiasporaDashboard />} />
-              <Route path="/super-tech" element={<SuperTechDashboard />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </BusinessModelProvider>
-    </LanguageProvider>
+    <AuthProvider>
+      <LanguageProvider>
+        <BusinessModelProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/elder-dashboard" element={<ElderDashboard />} />
+                <Route path="/youth-dashboard" element={<YouthDashboard />} />
+                <Route path="/women-dashboard" element={<WomenDashboard />} />
+                <Route path="/diaspora-dashboard" element={<DiasporaDashboard />} />
+                <Route path="/super-tech" element={<SuperTechDashboard />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </BusinessModelProvider>
+      </LanguageProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
