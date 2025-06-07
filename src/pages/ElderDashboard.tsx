@@ -1,8 +1,9 @@
 
-import { ElderDashboard } from '@/components/dashboards/ElderDashboard';
+import React from 'react';
+import { ElderDashboard as ElderDashboardComponent } from '@/components/dashboards/ElderDashboard';
 
-const ElderDashboardPage = () => {
-  return <ElderDashboard />;
+const ElderDashboard = () => {
+  return <ElderDashboardComponent />;
 };
 
-export default ElderDashboardPage;
+export default ElderDashboard;

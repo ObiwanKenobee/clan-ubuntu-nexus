@@ -1,8 +1,9 @@
 
-import { YouthDashboard } from '@/components/dashboards/YouthDashboard';
+import React from 'react';
+import { YouthDashboard as YouthDashboardComponent } from '@/components/dashboards/YouthDashboard';
 
-const YouthDashboardPage = () => {
-  return <YouthDashboard />;
+const YouthDashboard = () => {
+  return <YouthDashboardComponent />;
 };
 
-export default YouthDashboardPage;
+export default YouthDashboard;

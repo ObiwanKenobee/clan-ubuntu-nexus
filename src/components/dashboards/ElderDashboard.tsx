@@ -1,284 +1,214 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Shield, Gavel, Users, Mic, FileText, AlertCircle } from 'lucide-react';
-import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
-import { ServicePackagesGrid } from '@/components/business/ServicePackagesGrid';
-import { MissionMetrics } from '@/components/business/MissionMetrics';
-import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
-import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
-import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  Shield, 
+  Users, 
+  Gavel, 
+  BookOpen, 
+  TrendingUp, 
+  AlertTriangle,
+  Crown,
+  Heart
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const ElderDashboard = () => {
+  const { user } = useAuth();
   const { translate } = useLanguage();
-  const [pendingVotes, setPendingVotes] = useState([
-    { id: 1, type: 'Youth Task', title: 'Approve Maria\'s school support', urgency: 'high' },
-    { id: 2, type: 'Ethics Rule', title: 'New grazing land protocol', urgency: 'medium' },
-    { id: 3, type: 'Override Request', title: 'Emergency medical fund access', urgency: 'high' }
-  ]);
+  const [activeDisputes] = useState(3);
+  const [pendingApprovals] = useState(7);
 
-  const recentChanges = [
-    { type: 'Rule Added', title: 'Water sharing protocol updated', time: '2 hours ago' },
-    { type: 'Dispute Resolved', title: 'Land boundary case #34', time: '1 day ago' },
-    { type: 'Youth Progress', title: '5 tasks completed this week', time: '2 days ago' }
+  const elderMetrics = [
+    { label: 'Active Disputes', value: activeDisputes, icon: Gavel, color: 'text-red-600' },
+    { label: 'Pending Approvals', value: pendingApprovals, icon: Shield, color: 'text-yellow-600' },
+    { label: 'Clan Members', value: 127, icon: Users, color: 'text-blue-600' },
+    { label: 'Rites This Month', value: 12, icon: Crown, color: 'text-purple-600' },
   ];
 
-  const handleVoiceCommand = (command: string, language: string) => {
-    console.log('Elder voice command:', command, language);
-    // Process elder-specific voice commands
-  };
+  const recentDisputes = [
+    { id: 1, type: 'Land Inheritance', parties: ['Nyambura Family', 'Momanyi Clan'], status: 'pending', priority: 'high' },
+    { id: 2, type: 'Marriage Custom', parties: ['Kemunto Family'], status: 'review', priority: 'medium' },
+    { id: 3, type: 'Debt Resolution', parties: ['Moraa Trading', 'Bosire Farmers'], status: 'mediation', priority: 'low' },
+  ];
 
-  const handleVoiceRecording = (audioBlob: Blob, transcript: string) => {
-    console.log('Elder voice recording:', transcript);
-    // Save elder wisdom recordings
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
-    <BusinessModelProvider>
-      <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="w-16 h-16 bg-ochre-500 rounded-full flex items-center justify-center">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">{translate('elder_council')}</h1>
-                <p className="text-muted-foreground">Sacred Digital Steward • Governance • Ethics • Legacy</p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-ochre-200 p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-amber-600 to-orange-600 rounded-full flex items-center justify-center">
+              <Shield className="w-6 h-6 text-white" />
             </div>
-            <div className="flex items-center space-x-2">
-              <Badge className="elder-badge">Council Authority</Badge>
-              <Badge variant="outline">Ethics Keeper</Badge>
-              <Badge variant="outline">Voice Authentication</Badge>
+            <div>
+              <h1 className="text-2xl font-bold">{translate('elder_council')}</h1>
+              <p className="text-muted-foreground">Welcome, Elder {user?.name}</p>
             </div>
           </div>
-
-          {/* Cultural & Voice Integration */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <CulturalAdaptations archetype="elder" />
-            <VoiceInterface
-              mode="record"
-              title="Record Elder Wisdom"
-              onVoiceRecording={handleVoiceRecording}
-              onVoiceCommand={handleVoiceCommand}
-            />
-          </div>
-
-          {/* Business Model Integration */}
-          <div className="mb-6">
-            <TierUpgradeCard archetype="Elder Council" />
-          </div>
-
-          <Tabs defaultValue="governance" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
-              <TabsTrigger value="governance">Governance</TabsTrigger>
-              <TabsTrigger value="ethics">Ethics & Rules</TabsTrigger>
-              <TabsTrigger value="disputes">Disputes</TabsTrigger>
-              <TabsTrigger value="memory">Cultural Memory</TabsTrigger>
-              <TabsTrigger value="services">Services & Growth</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="governance" className="space-y-6">
-              {/* Pending Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <AlertCircle className="w-5 h-5 text-orange-500" />
-                    <span>Pending Council Actions ({pendingVotes.length})</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {pendingVotes.map(vote => (
-                      <div key={vote.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant={vote.urgency === 'high' ? 'destructive' : 'default'}>
-                              {vote.type}
-                            </Badge>
-                            <span className="font-medium">{vote.title}</span>
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">Review</Button>
-                          <Button size="sm">Vote</Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Changes */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Clan Changes</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {recentChanges.map((change, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 border-l-4 border-primary bg-primary/5">
-                        <div>
-                          <p className="font-medium">{change.title}</p>
-                          <p className="text-sm text-muted-foreground">{change.type}</p>
-                        </div>
-                        <span className="text-sm text-muted-foreground">{change.time}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="ethics" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="w-5 h-5" />
-                    <span>Ethics Ledger Management</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Button className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Mic className="w-6 h-6" />
-                      <span>Record New Rule (Voice)</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <FileText className="w-6 h-6" />
-                      <span>Write Rule (Text)</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Gavel className="w-6 h-6" />
-                      <span>Review Amendments</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Users className="w-6 h-6" />
-                      <span>Council Voting</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="disputes" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Land & Inheritance Disputes</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <Gavel className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">No active disputes requiring elder intervention</p>
-                    <Button className="mt-4">Open Inheritance Simulator</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="memory" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cultural Memory Preservation</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Button className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Mic className="w-6 h-6" />
-                      <span>Record Oral History</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Users className="w-6 h-6" />
-                      <span>Add Ancestor Story</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="services" className="space-y-6">
-              {/* Mission Metrics */}
-              <MissionMetrics />
-
-              {/* Service Packages */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Elder Council Service Packages</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ServicePackagesGrid />
-                </CardContent>
-              </Card>
-
-              {/* Growth Strategy */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Clan Growth & Federation</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 bg-primary/10 rounded-lg">
-                      <h4 className="font-medium mb-2">Invite Cousin Branches</h4>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Expand your clan network by inviting related family branches
-                      </p>
-                      <Button size="sm">Send Invitations</Button>
-                    </div>
-                    <div className="p-4 bg-emerald/10 rounded-lg">
-                      <h4 className="font-medium mb-2">Join Federation</h4>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Connect with other clans for shared governance and resources
-                      </p>
-                      <Button size="sm" variant="outline">Explore Federation</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">23</div>
-                  <p className="text-sm text-muted-foreground">Active Rules</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-emerald-600">156</div>
-                  <p className="text-sm text-muted-foreground">Youth Members</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-ochre-600">12</div>
-                  <p className="text-sm text-muted-foreground">Pending Votes</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-sienna-600">89%</div>
-                  <p className="text-sm text-muted-foreground">Ethics Compliance</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <Badge className="bg-amber-100 text-amber-800">Council Authority</Badge>
         </div>
       </div>
-    </BusinessModelProvider>
+
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {elderMetrics.map((metric, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
+                    <p className="text-2xl font-bold">{metric.value}</p>
+                  </div>
+                  <metric.icon className={`w-8 h-8 ${metric.color}`} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Tabs defaultValue="disputes" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="disputes">Active Disputes</TabsTrigger>
+            <TabsTrigger value="approvals">Pending Approvals</TabsTrigger>
+            <TabsTrigger value="wisdom">Wisdom Archive</TabsTrigger>
+            <TabsTrigger value="governance">Governance</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="disputes" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Gavel className="w-5 h-5" />
+                  <span>Dispute Resolution Center</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-64">
+                  <div className="space-y-3">
+                    {recentDisputes.map((dispute) => (
+                      <div key={dispute.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex-1">
+                          <h4 className="font-medium">{dispute.type}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Parties: {dispute.parties.join(', ')}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge className={getPriorityColor(dispute.priority)}>
+                            {dispute.priority}
+                          </Badge>
+                          <Button size="sm" variant="outline">Review</Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="approvals" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Shield className="w-5 h-5" />
+                  <span>Approval Queue</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h4 className="font-medium">Youth Council Formation</h4>
+                      <p className="text-sm text-muted-foreground">New leadership structure proposal</p>
+                    </div>
+                    <div className="space-x-2">
+                      <Button size="sm" variant="outline">Approve</Button>
+                      <Button size="sm" variant="ghost">Defer</Button>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h4 className="font-medium">Vault Allocation Request</h4>
+                      <p className="text-sm text-muted-foreground">Education fund distribution: KES 50,000</p>
+                    </div>
+                    <div className="space-x-2">
+                      <Button size="sm" variant="outline">Approve</Button>
+                      <Button size="sm" variant="ghost">Review</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="wisdom" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BookOpen className="w-5 h-5" />
+                  <span>Ancestral Wisdom Archive</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                    <h4 className="font-medium text-amber-800">Proverb of the Day</h4>
+                    <p className="text-sm text-amber-700 mt-1">
+                      "Omogusii bware nyasae enkima" - A Gusii person carries God's blessing
+                    </p>
+                  </div>
+                  <Button className="w-full" variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Access Full Wisdom Library
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="governance" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Crown className="w-5 h-5" />
+                  <span>Governance Dashboard</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">Council Meetings</h4>
+                    <p className="text-sm text-muted-foreground">Next: Sunday, 2:00 PM</p>
+                    <Button size="sm" className="mt-2">Join Virtual Meeting</Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium mb-2">Voting Status</h4>
+                    <p className="text-sm text-muted-foreground">3 active proposals</p>
+                    <Button size="sm" className="mt-2" variant="outline">Review Proposals</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
   );
 };

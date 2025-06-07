@@ -1,366 +1,172 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AlertCircle, Phone, Mail, Users, Shield, Globe, Mic, Languages } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { ElderAuth } from '@/components/auth/ElderAuth';
-import { YouthAuth } from '@/components/auth/YouthAuth';
-import { WomenAuth } from '@/components/auth/WomenAuth';
-import { DiasporaAuth } from '@/components/auth/DiasporaAuth';
-import { TechStewardAuth } from '@/components/auth/TechStewardAuth';
-import { CivicAuth } from '@/components/auth/CivicAuth';
+import { toast } from 'sonner';
+import { Globe, Shield, Users, Zap } from 'lucide-react';
 import { LanguageSelector } from '@/components/ui/language-selector';
-import { ResponsiveContainer, ResponsiveGrid } from '@/components/ui/responsive-layout';
-import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
-import { ArchetypePersonalization } from '@/components/archetype/ArchetypePersonalization';
-import { VoiceInterface } from '@/components/voice/VoiceInterface';
-import { useLanguage, AFRICAN_LANGUAGES } from '@/contexts/LanguageContext';
-import { useResponsive } from '@/hooks/use-responsive';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Auth = () => {
-  const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [role, setRole] = useState<'elder' | 'youth' | 'women' | 'diaspora' | 'tech_steward'>('youth');
+  const [isLoading, setIsLoading] = useState(false);
+  const { login, register } = useAuth();
+  const { translate } = useLanguage();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { translate, currentLanguage } = useLanguage();
-  const { isMobile, isTablet } = useResponsive();
-  const [selectedArchetype, setSelectedArchetype] = useState('elder');
-  const [showPersonalization, setShowPersonalization] = useState(false);
 
-  useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Get user role from metadata and redirect to appropriate dashboard
-          const userRole = session.user.user_metadata?.role;
-          
-          switch (userRole) {
-            case 'elder':
-              navigate('/elder-dashboard');
-              break;
-            case 'youth':
-              navigate('/youth-dashboard');
-              break;
-            case 'women':
-              navigate('/women-dashboard');
-              break;
-            case 'diaspora':
-              navigate('/diaspora-dashboard');
-              break;
-            case 'tech_steward':
-              navigate('/tech-dashboard');
-              break;
-            case 'civic':
-              navigate('/civic-dashboard');
-              break;
-            default:
-              navigate('/'); // Fallback to main dashboard
-          }
-        }
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        const userRole = session.user.user_metadata?.role;
-        
-        switch (userRole) {
-          case 'elder':
-            navigate('/elder-dashboard');
-            break;
-          case 'youth':
-            navigate('/youth-dashboard');
-            break;
-          case 'women':
-            navigate('/women-dashboard');
-            break;
-          case 'diaspora':
-            navigate('/diaspora-dashboard');
-            break;
-          case 'tech_steward':
-            navigate('/tech-dashboard');
-            break;
-          case 'civic':
-            navigate('/civic-dashboard');
-            break;
-          default:
-            navigate('/');
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const roleDefinitions = [
-    {
-      id: 'elder',
-      title: '🧓 Elders',
-      description: 'Council leaders with override permissions',
-      auth: 'PIN + Voice Signature',
-      backup: 'Kiosk access + Clan Steward override',
-      icon: Shield,
-      color: 'bg-ochre-500'
-    },
-    {
-      id: 'youth',
-      title: '👩‍🦱 Youth',
-      description: 'Growing members earning trust tokens',
-      auth: 'Phone + OTP + Role Badge',
-      backup: 'USSD flow with branch ID',
-      icon: Users,
-      color: 'bg-emerald-500'
-    },
-    {
-      id: 'women',
-      title: '👩‍🍼 Women/Mothers',
-      description: 'Family health and memory keepers',
-      auth: 'Phone + Assisted Face ID',
-      backup: 'SMS + Elder Proxy Verification',
-      icon: Phone,
-      color: 'bg-sienna-500'
-    },
-    {
-      id: 'diaspora',
-      title: '🧑‍💼 Diaspora',
-      description: 'Members abroad contributing remotely',
-      auth: 'Email + OTP + ClanKey Phrase',
-      backup: 'Mobile App + Elder invite verification',
-      icon: Globe,
-      color: 'bg-primary'
-    },
-    {
-      id: 'tech',
-      title: '🧑‍🔧 Tech Stewards',
-      description: 'System administrators and sync managers',
-      auth: 'Credentialed login + Multi-role switching',
-      backup: 'Manual device pairing at Kiosk',
-      icon: Shield,
-      color: 'bg-secondary'
-    },
-    {
-      id: 'civic',
-      title: '🏛️ County/NGO',
-      description: 'Government and NGO partners',
-      auth: 'OAuth or API key via Government Portal',
-      backup: 'Smart card login or admin whitelist',
-      icon: Mail,
-      color: 'bg-muted'
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    const success = await login(email, password);
+    if (success) {
+      navigate('/');
     }
+    setIsLoading(false);
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    const success = await register({ email, password, name, role });
+    if (success) {
+      navigate('/');
+    }
+    setIsLoading(false);
+  };
+
+  const roles = [
+    { value: 'elder', label: 'Elder Council', icon: Shield, color: 'bg-amber-500' },
+    { value: 'youth', label: 'Youth Growth', icon: Zap, color: 'bg-emerald-500' },
+    { value: 'women', label: 'Women Leadership', icon: Users, color: 'bg-pink-500' },
+    { value: 'diaspora', label: 'Diaspora Bridge', icon: Globe, color: 'bg-blue-500' },
+    { value: 'tech_steward', label: 'Tech Steward', icon: Zap, color: 'bg-purple-500' },
   ];
 
-  const handlePersonalization = (preferences: any) => {
-    console.log('Personalization preferences:', preferences);
-    localStorage.setItem('user-preferences', JSON.stringify(preferences));
-    setShowPersonalization(false);
-  };
-
-  const handleVoiceCommand = (command: string, language: string) => {
-    console.log('Voice command received:', command, 'in', language);
-  };
-
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 ${currentLanguage.rtl ? 'rtl' : 'ltr'}`}>
-      <ResponsiveContainer maxWidth="full" className="py-4">
-        {/* Header with Language Selector */}
-        <div className={`text-center mb-6 ${isMobile ? 'mb-4' : 'mb-8'}`}>
-          <div className={`flex items-center ${isMobile ? 'flex-col space-y-4' : 'justify-between'} mb-4`}>
-            <div className={`flex items-center space-x-4 ${isMobile ? 'text-center' : ''}`}>
-              <div className="w-12 h-12 lg:w-16 lg:h-16 clan-gradient rounded-full flex items-center justify-center animate-pulse-ubuntu">
-                <span className="text-white font-bold text-xl lg:text-2xl">🌳</span>
-              </div>
-              <div className={isMobile ? 'text-center' : 'text-left'}>
-                <h1 className={`${isMobile ? 'text-2xl' : 'text-3xl'} font-bold text-foreground`}>
-                  AEGIS ClanChain
-                </h1>
-                <p className="text-muted-foreground text-sm lg:text-base">
-                  {translate('clan_dashboard')}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <LanguageSelector />
-              <Badge variant="outline" className="text-xs">
-                <Languages className="w-3 h-3 mr-1" />
-                {AFRICAN_LANGUAGES.length}+ Languages
-              </Badge>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-ochre-50 via-background to-emerald-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 clan-gradient rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-white font-bold text-2xl">🌳</span>
           </div>
-          
-          {/* Principles Banner */}
-          <ResponsiveGrid 
-            cols={{ mobile: 2, tablet: 3, desktop: 5 }} 
-            gap={2} 
-            className="mb-6"
-          >
-            <Badge variant="outline" className="text-xs p-2">Ancestral Identity</Badge>
-            <Badge variant="outline" className="text-xs p-2">Role-Based Access</Badge>
-            <Badge variant="outline" className="text-xs p-2">Consent-First</Badge>
-            <Badge variant="outline" className="text-xs p-2">Trust-Weighted</Badge>
-            <Badge variant="outline" className="text-xs p-2">Offline Ready</Badge>
-          </ResponsiveGrid>
+          <h1 className="text-3xl font-bold text-foreground">AEGIS Portal</h1>
+          <p className="text-muted-foreground">{translate('welcome')} to ClanChain</p>
+          <div className="mt-4">
+            <LanguageSelector />
+          </div>
         </div>
 
-        {/* Cultural Features Grid */}
-        <ResponsiveGrid 
-          cols={{ mobile: 1, tablet: 2, desktop: 3 }} 
-          gap={6} 
-          className="mb-6"
-        >
-          <CulturalAdaptations archetype={selectedArchetype} />
-          
-          <VoiceInterface
-            mode="command"
-            title="Voice Authentication"
-            onVoiceCommand={handleVoiceCommand}
-          />
-          
-          {showPersonalization ? (
-            <ArchetypePersonalization
-              archetype={selectedArchetype}
-              onPersonalize={handlePersonalization}
-            />
-          ) : (
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle className={isMobile ? 'text-lg' : 'text-xl'}>
-                  Personalize Experience
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Customize your dashboard based on your role and cultural preferences
-                </p>
-                <Button onClick={() => setShowPersonalization(true)} className="w-full">
-                  Start Personalization
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </ResponsiveGrid>
-
-        {/* Role Selection Tabs */}
-        <Tabs 
-          defaultValue="elder" 
-          className="w-full"
-          onValueChange={setSelectedArchetype}
-        >
-          <TabsList className={`grid w-full ${isMobile ? 'grid-cols-3' : 'grid-cols-6'} mb-6 bg-white/60 backdrop-blur-sm`}>
-            {roleDefinitions.map((role) => (
-              <TabsTrigger
-                key={role.id}
-                value={role.id}
-                className={`flex flex-col items-center space-y-1 p-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground ${isMobile ? 'text-xs' : ''}`}
-              >
-                <role.icon className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-                <span className={`${isMobile ? 'text-xs' : 'text-xs hidden sm:inline'}`}>
-                  {role.title.split(' ')[1]}
-                </span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          {/* Role Information Cards */}
-          <ResponsiveGrid 
-            cols={{ mobile: 1, tablet: 2, desktop: 3 }} 
-            gap={4} 
-            className="mb-6"
-          >
-            {roleDefinitions.map((role) => (
-              <Card key={role.id} className="bg-white/80 backdrop-blur-sm">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-8 h-8 ${role.color} rounded-full flex items-center justify-center`}>
-                      <role.icon className="w-4 h-4 text-white" />
-                    </div>
-                    <CardTitle className={isMobile ? 'text-sm' : 'text-sm'}>
-                      {role.title}
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-xs text-muted-foreground mb-2">{role.description}</p>
-                  <div className="space-y-1">
-                    <p className="text-xs"><strong>Primary:</strong> {role.auth}</p>
-                    <p className="text-xs"><strong>Backup:</strong> {role.backup}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </ResponsiveGrid>
-
-          {/* Authentication Forms */}
-          <TabsContent value="elder">
-            <ElderAuth />
-          </TabsContent>
-
-          <TabsContent value="youth">
-            <YouthAuth />
-          </TabsContent>
-
-          <TabsContent value="women">
-            <WomenAuth />
-          </TabsContent>
-
-          <TabsContent value="diaspora">
-            <DiasporaAuth />
-          </TabsContent>
-
-          <TabsContent value="tech">
-            <TechStewardAuth />
-          </TabsContent>
-
-          <TabsContent value="civic">
-            <CivicAuth />
-          </TabsContent>
-        </Tabs>
-
-        {/* Innovation Features Footer */}
-        <Card className="mt-6 bg-white/60 backdrop-blur-sm">
+        <Card>
           <CardHeader>
-            <CardTitle className={`${isMobile ? 'text-sm' : 'text-sm'} flex items-center space-x-2`}>
-              <Mic className="w-4 h-4" />
-              <span>Cultural & Accessibility Innovations</span>
-            </CardTitle>
+            <CardTitle className="text-center">Access Your Clan Network</CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveGrid 
-              cols={{ mobile: 1, tablet: 2, desktop: 3 }} 
-              gap={4} 
-              className="text-xs"
-            >
-              <div>
-                <p><strong>🗣️ Multi-Language Voice:</strong> {AFRICAN_LANGUAGES.length}+ African languages</p>
-                <p><strong>🌍 Cultural Adaptation:</strong> Ubuntu, lunar calendars, oral traditions</p>
-              </div>
-              <div>
-                <p><strong>🎭 Archetype Personalization:</strong> Role-based interfaces</p>
-                <p><strong>🔊 Accessibility First:</strong> Voice navigation for all users</p>
-              </div>
-              <div>
-                <p><strong>📱 Offline Cultural Sync:</strong> SMS and USSD integration</p>
-                <p><strong>🕯️ Sacred Technology:</strong> Ritual-aware digital stewardship</p>
-              </div>
-            </ResponsiveGrid>
+            <Tabs defaultValue="login" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="login">Login</TabsTrigger>
+                <TabsTrigger value="register">Register</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="login" className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Signing in...' : 'Sign In'}
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              <TabsContent value="register" className="space-y-4">
+                <form onSubmit={handleRegister} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-name">Full Name</Label>
+                    <Input
+                      id="reg-name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-email">Email</Label>
+                    <Input
+                      id="reg-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="reg-password">Password</Label>
+                    <Input
+                      id="reg-password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Role in Community</Label>
+                    <div className="grid grid-cols-1 gap-2">
+                      {roles.map((roleOption) => (
+                        <Button
+                          key={roleOption.value}
+                          type="button"
+                          variant={role === roleOption.value ? "default" : "outline"}
+                          className={`w-full justify-start ${role === roleOption.value ? roleOption.color : ''}`}
+                          onClick={() => setRole(roleOption.value as any)}
+                        >
+                          <roleOption.icon className="w-4 h-4 mr-2" />
+                          {roleOption.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Creating account...' : 'Create Account'}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
-      </ResponsiveContainer>
+
+        <div className="text-center mt-6">
+          <Badge variant="outline">Secure • Decentralized • Cultural</Badge>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,360 +1,244 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Heart, Phone, Baby, Coins, AlertTriangle, Users, Camera } from 'lucide-react';
-import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
-import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
-import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
-import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { 
+  Heart, 
+  Users, 
+  Banknote, 
+  BookOpen, 
+  Shield, 
+  Crown,
+  Baby,
+  Stethoscope
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const WomenDashboard = () => {
+  const { user } = useAuth();
   const { translate } = useLanguage();
-  const [healthAlerts] = useState([
-    { id: 1, type: 'Vaccination', message: 'Baby John vaccination due in 3 days', urgency: 'medium' },
-    { id: 2, type: 'Pregnancy', message: 'Antenatal checkup scheduled for Friday', urgency: 'high' },
-    { id: 3, type: 'Community', message: 'Flu outbreak reported in Nyanchwa village', urgency: 'low' }
-  ]);
 
-  const [familyFund] = useState({
-    totalBalance: 45000,
-    monthlyContribution: 5000,
-    lastExpense: 'School fees - 8000 KSH',
-    pendingRequests: 2
-  });
+  const healthMetrics = [
+    { label: 'Health Checkups', value: '85%', icon: Stethoscope, color: 'text-pink-600' },
+    { label: 'Economic Groups', value: 12, icon: Users, color: 'text-purple-600' },
+    { label: 'Children Supported', value: 43, icon: Baby, color: 'text-blue-600' },
+    { label: 'Leadership Roles', value: 8, icon: Crown, color: 'text-yellow-600' },
+  ];
 
-  const handleVoiceCommand = (command: string, language: string) => {
-    console.log('Women voice command:', command, language);
-    // Process women-specific voice commands for health and family management
-  };
+  const economicGroups = [
+    { name: 'Ekerubo Women Group', members: 25, focus: 'Savings & Credit', status: 'active' },
+    { name: 'Mama Mboga Collective', members: 18, focus: 'Market Trading', status: 'active' },
+    { name: 'Nyaboke Tailors', members: 12, focus: 'Fashion & Design', status: 'growing' },
+  ];
 
   return (
-    <BusinessModelProvider>
-      <div className="min-h-screen bg-gradient-to-br from-sienna-50 via-background to-pink-50 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="w-16 h-16 bg-sienna-500 rounded-full flex items-center justify-center">
-                <Heart className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">{translate('family_care')}</h1>
-                <p className="text-muted-foreground">Sacred Stewards • Health Guardians • Community Backbone</p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-background to-purple-50">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-pink-200 p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full flex items-center justify-center">
+              <Heart className="w-6 h-6 text-white" />
             </div>
-            <div className="flex items-center space-x-2">
-              <Badge className="bg-sienna-500">Health Keeper</Badge>
-              <Badge variant="outline">Family Vault Access</Badge>
-              <Badge variant="outline">Memory Guardian</Badge>
+            <div>
+              <h1 className="text-2xl font-bold">{translate('family_care')}</h1>
+              <p className="text-muted-foreground">Welcome, {user?.name}</p>
             </div>
           </div>
-
-          {/* Cultural & Voice Integration */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <CulturalAdaptations archetype="women" />
-            <VoiceInterface
-              mode="record"
-              title="Family Health Voice Log"
-              onVoiceCommand={handleVoiceCommand}
-            />
-          </div>
-
-          {/* Business Model Integration */}
-          <div className="mb-6">
-            <TierUpgradeCard archetype="Women's Care Network" />
-          </div>
-
-          <Tabs defaultValue="health" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
-              <TabsTrigger value="health">Health & Alerts</TabsTrigger>
-              <TabsTrigger value="finance">Family Vault</TabsTrigger>
-              <TabsTrigger value="family">Family Records</TabsTrigger>
-              <TabsTrigger value="support">Support & Safety</TabsTrigger>
-              <TabsTrigger value="business">Community Value</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="health" className="space-y-6">
-              {/* Health Alerts */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <AlertTriangle className="w-5 h-5 text-orange-500" />
-                    <span>Health Alerts & Reminders</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {healthAlerts.map(alert => (
-                      <div key={alert.id} className={`p-4 rounded-lg border-l-4 ${
-                        alert.urgency === 'high' ? 'border-red-500 bg-red-50' :
-                        alert.urgency === 'medium' ? 'border-orange-500 bg-orange-50' :
-                        'border-blue-500 bg-blue-50'
-                      }`}>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <Badge variant="outline" className="mb-2">{alert.type}</Badge>
-                            <p className="font-medium">{alert.message}</p>
-                          </div>
-                          <Button size="sm">
-                            {alert.urgency === 'high' ? 'Urgent' : 'Review'}
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Health Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Health Management Tools</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Button className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Baby className="w-6 h-6" />
-                      <span className="text-sm">Pregnancy Care</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Heart className="w-6 h-6" />
-                      <span className="text-sm">Child Health</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Phone className="w-6 h-6" />
-                      <span className="text-sm">Call Clinic</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <AlertTriangle className="w-6 h-6" />
-                      <span className="text-sm">Emergency</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="finance" className="space-y-6">
-              {/* Family Vault Overview */}
-              <Card className="bg-gradient-to-r from-sienna-100 to-orange-100 border-sienna-200">
-                <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold">Family Vault Balance</h3>
-                      <p className="text-3xl font-bold text-sienna-600">{familyFund.totalBalance.toLocaleString()} KSH</p>
-                      <p className="text-sm text-muted-foreground">Monthly contribution: {familyFund.monthlyContribution.toLocaleString()} KSH</p>
-                    </div>
-                    <div className="text-right">
-                      <Coins className="w-12 h-12 text-sienna-500 mb-2" />
-                      <Badge>{familyFund.pendingRequests} pending requests</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Transactions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Family Expenses</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                      <div>
-                        <p className="font-medium">School fees - Mary</p>
-                        <p className="text-sm text-muted-foreground">Education expense</p>
-                      </div>
-                      <span className="font-bold text-red-600">-8,000 KSH</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                      <div>
-                        <p className="font-medium">Medical checkup</p>
-                        <p className="text-sm text-muted-foreground">Health expense</p>
-                      </div>
-                      <span className="font-bold text-red-600">-2,500 KSH</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-green-50 rounded">
-                      <div>
-                        <p className="font-medium">Monthly contribution</p>
-                        <p className="text-sm text-muted-foreground">Family savings</p>
-                      </div>
-                      <span className="font-bold text-green-600">+5,000 KSH</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Family Vault Actions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button className="h-16">Request Education Support</Button>
-                    <Button variant="outline" className="h-16">Add Medical Expense</Button>
-                    <Button variant="outline" className="h-16">View Contribution History</Button>
-                    <Button variant="outline" className="h-16">Emergency Fund Access</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="family" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-primary" />
-                    <span>Family Tree Management</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Button className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Baby className="w-6 h-6" />
-                      <span>Add New Birth</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Heart className="w-6 h-6" />
-                      <span>Record Marriage</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Users className="w-6 h-6" />
-                      <span>Update Family Info</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Cultural Memory Contributions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button className="h-16 flex flex-col items-center justify-center space-y-2">
-                      <Camera className="w-6 h-6" />
-                      <span>Record Family Story</span>
-                    </Button>
-                    <Button variant="outline" className="h-16 flex flex-col items-center justify-center space-y-2">
-                      <Heart className="w-6 h-6" />
-                      <span>Share Wisdom</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="support" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Phone className="w-5 h-5 text-red-500" />
-                    <span>Support & Safety Channels</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <h4 className="font-medium text-red-800 mb-2">Emergency Support</h4>
-                      <p className="text-sm text-red-700 mb-3">
-                        Safe and confidential reporting channel with council oversight
-                      </p>
-                      <Button className="bg-red-600 hover:bg-red-700">Access Safe Channel</Button>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Button variant="outline" className="h-16">
-                        Connect with Elder Council
-                      </Button>
-                      <Button variant="outline" className="h-16">
-                        Women's Support Group
-                      </Button>
-                      <Button variant="outline" className="h-16">
-                        Health Support Line
-                      </Button>
-                      <Button variant="outline" className="h-16">
-                        Educational Guidance
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="business" className="space-y-6">
-              {/* Community Impact Metrics */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Community Impact</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    <div className="text-center p-4 bg-sienna-50 rounded-lg">
-                      <div className="text-2xl font-bold text-sienna-600">34</div>
-                      <p className="text-sm text-muted-foreground">Families Supported</p>
-                    </div>
-                    <div className="text-center p-4 bg-red-50 rounded-lg">
-                      <div className="text-2xl font-bold text-red-600">12</div>
-                      <p className="text-sm text-muted-foreground">Health Alerts Managed</p>
-                    </div>
-                    <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                      <div className="text-2xl font-bold text-emerald-600">89%</div>
-                      <p className="text-sm text-muted-foreground">Vault Success Rate</p>
-                    </div>
-                    <div className="text-center p-4 bg-primary-50 rounded-lg">
-                      <div className="text-2xl font-bold text-primary">156</div>
-                      <p className="text-sm text-muted-foreground">Stories Preserved</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* SACCO Integration */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Women's SACCO Integration</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="p-4 bg-gradient-to-r from-sienna-100 to-pink-100 rounded-lg mb-4">
-                    <h4 className="font-medium mb-2">Community Vault Service Active</h4>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      Your SACCO group benefits from shared digital vault management
-                    </p>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="font-medium">Group Size:</span> 23 women
-                      </div>
-                      <div>
-                        <span className="font-medium">Monthly Savings:</span> 15,000 KSH
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-emerald-50 rounded">
-                      <div>
-                        <p className="font-medium">Burial Society Fund</p>
-                        <p className="text-sm text-muted-foreground">Auto-disbursement triggers</p>
-                      </div>
-                      <Badge className="bg-emerald-500">Active</Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-primary-50 rounded">
-                      <div>
-                        <p className="font-medium">Education Bursary Pool</p>
-                        <p className="text-sm text-muted-foreground">Supporting 12 children</p>
-                      </div>
-                      <Badge className="bg-primary">Managing</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+          <Badge className="bg-pink-100 text-pink-800">Community Mother</Badge>
         </div>
       </div>
-    </BusinessModelProvider>
+
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {healthMetrics.map((metric, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
+                    <p className="text-2xl font-bold">{metric.value}</p>
+                  </div>
+                  <metric.icon className={`w-8 h-8 ${metric.color}`} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Tabs defaultValue="health" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="health">Health & Wellness</TabsTrigger>
+            <TabsTrigger value="economic">Economic Groups</TabsTrigger>
+            <TabsTrigger value="children">Child Welfare</TabsTrigger>
+            <TabsTrigger value="leadership">Leadership</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="health" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Stethoscope className="w-5 h-5" />
+                    <span>Community Health</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                      <h4 className="font-medium text-green-800">Maternal Health Program</h4>
+                      <p className="text-sm text-green-700">Next clinic: Thursday 9 AM</p>
+                    </div>
+                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <h4 className="font-medium text-blue-800">Nutrition Workshop</h4>
+                      <p className="text-sm text-blue-700">Saturday 2 PM - Community Center</p>
+                    </div>
+                    <Button className="w-full">View All Health Programs</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BookOpen className="w-5 h-5" />
+                    <span>Traditional Medicine</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Herbal Remedies Archive</h4>
+                      <p className="text-sm text-muted-foreground">Traditional healing knowledge</p>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Elder Healers Network</h4>
+                      <p className="text-sm text-muted-foreground">Connect with traditional doctors</p>
+                    </div>
+                    <Button variant="outline" className="w-full">Access Archive</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="economic" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Banknote className="w-5 h-5" />
+                  <span>Women's Economic Groups</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {economicGroups.map((group, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex-1">
+                        <h4 className="font-medium">{group.name}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {group.members} members • {group.focus}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={group.status === 'active' ? 'default' : 'secondary'}>
+                          {group.status}
+                        </Badge>
+                        <Button size="sm" variant="outline">Join</Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Button className="w-full mt-4">Create New Group</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="children" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Baby className="w-5 h-5" />
+                    <span>Child Development</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Early Education Program</h4>
+                      <p className="text-sm text-muted-foreground">Ages 3-6 preparation</p>
+                      <Button size="sm" className="mt-2">Enroll Child</Button>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Nutrition Support</h4>
+                      <p className="text-sm text-muted-foreground">Monthly food supplements</p>
+                      <Button size="sm" className="mt-2" variant="outline">Apply</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Shield className="w-5 h-5" />
+                    <span>Child Protection</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                      <h4 className="font-medium text-red-800">Emergency Contact</h4>
+                      <p className="text-sm text-red-700">24/7 child protection hotline</p>
+                      <Button size="sm" className="mt-2" variant="destructive">Contact Now</Button>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Safety Education</h4>
+                      <p className="text-sm text-muted-foreground">Teaching children about safety</p>
+                      <Button size="sm" className="mt-2" variant="outline">Learn More</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="leadership" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Crown className="w-5 h-5" />
+                  <span>Women's Leadership Council</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                    <h4 className="font-medium text-purple-800">Leadership Training</h4>
+                    <p className="text-sm text-purple-700">Develop your leadership skills</p>
+                    <Button size="sm" className="mt-2">Join Program</Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Mentorship Circle</h4>
+                      <p className="text-sm text-muted-foreground">Connect with other leaders</p>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Community Advocacy</h4>
+                      <p className="text-sm text-muted-foreground">Voice for women's rights</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
   );
 };

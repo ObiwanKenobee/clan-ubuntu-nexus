@@ -1,466 +1,287 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Globe, Coins, Video, Vote, Users, Heart, BookOpen, TrendingUp } from 'lucide-react';
-import { TierUpgradeCard } from '@/components/business/TierUpgradeCard';
-import { BusinessModelProvider } from '@/contexts/BusinessModelContext';
-import { CulturalAdaptations } from '@/components/cultural/CulturalAdaptations';
-import { VoiceInterface } from '@/components/voice/VoiceInterface';
+import { 
+  Globe, 
+  Plane, 
+  DollarSign, 
+  Video, 
+  Heart, 
+  Users,
+  MapPin,
+  Calendar
+} from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export const DiasporaDashboard = () => {
+  const { user } = useAuth();
   const { translate } = useLanguage();
-  const [clanUpdates] = useState([
-    { type: 'Education', title: '5 students received bursaries this month', time: '2 days ago', impact: 'high' },
-    { type: 'Health', title: 'New clinic opened in Nyanchwa', time: '1 week ago', impact: 'medium' },
-    { type: 'Celebration', title: 'John Onderi graduation ceremony', time: '2 weeks ago', impact: 'low' }
-  ]);
 
-  const [investmentOpportunities] = useState([
-    { title: 'Nyanchwa Solar Clinic Project', amount: 150000, raised: 75000, supporters: 23 },
-    { title: 'Secondary School Computer Lab', amount: 100000, raised: 45000, supporters: 15 },
-    { title: 'Women\'s Cooperative Expansion', amount: 80000, raised: 30000, supporters: 12 }
-  ]);
+  const connectionMetrics = [
+    { label: 'Remittances Sent', value: '$2,340', icon: DollarSign, color: 'text-green-600' },
+    { label: 'Family Connections', value: 47, icon: Users, color: 'text-blue-600' },
+    { label: 'Virtual Events', value: 12, icon: Video, color: 'text-purple-600' },
+    { label: 'Days Since Visit', value: 243, icon: Calendar, color: 'text-orange-600' },
+  ];
 
-  const handleVoiceCommand = (command: string, language: string) => {
-    console.log('Diaspora voice command:', command, language);
-    // Process diaspora-specific voice commands for remote participation
-  };
+  const upcomingEvents = [
+    { title: 'Virtual Family Reunion', date: 'Dec 25', time: '3:00 PM EAT', type: 'Family' },
+    { title: 'Diaspora Investment Talk', date: 'Jan 15', time: '7:00 PM GMT', type: 'Business' },
+    { title: 'Cultural Heritage Night', date: 'Feb 2', time: '6:00 PM EST', type: 'Culture' },
+  ];
+
+  const remittanceHistory = [
+    { recipient: 'Mother - Mary Nyong\'o', amount: '$200', date: 'Dec 1', purpose: 'Monthly Support' },
+    { recipient: 'Education Fund', amount: '$500', date: 'Nov 15', purpose: 'School Fees' },
+    { recipient: 'Community Project', amount: '$150', date: 'Nov 1', purpose: 'Water Well' },
+  ];
 
   return (
-    <BusinessModelProvider>
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-background to-blue-50 p-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                <Globe className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">{translate('diaspora_bridge')}</h1>
-                <p className="text-muted-foreground">Global Connector • Remote Supporter • Cultural Bridge</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-background to-indigo-50">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-blue-200 p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+              <Globe className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">{translate('diaspora_bridge')}</h1>
+              <p className="text-muted-foreground">Welcome back, {user?.name}</p>
+              <div className="flex items-center space-x-2 text-sm">
+                <MapPin className="w-4 h-4" />
+                <span>Toronto, Canada</span>
+                <span>•</span>
+                <span>GMT-5</span>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Badge className="bg-primary">Global Connector</Badge>
-              <Badge variant="outline">Remote Supporter</Badge>
-              <Badge variant="outline">Qatar Branch</Badge>
-            </div>
           </div>
-
-          {/* Cultural & Voice Integration */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <CulturalAdaptations archetype="diaspora" />
-            <VoiceInterface
-              mode="command"
-              title="Remote Participation Voice"
-              onVoiceCommand={handleVoiceCommand}
-            />
+          <div className="text-right">
+            <Badge className="bg-blue-100 text-blue-800">Global Connector</Badge>
+            <p className="text-sm text-muted-foreground mt-1">Online</p>
           </div>
-
-          {/* Business Model Integration */}
-          <div className="mb-6">
-            <TierUpgradeCard archetype="Diaspora Network" />
-          </div>
-
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-6">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="updates">Clan Updates</TabsTrigger>
-              <TabsTrigger value="support">Support Family</TabsTrigger>
-              <TabsTrigger value="participate">Participate</TabsTrigger>
-              <TabsTrigger value="invest">Invest & Vote</TabsTrigger>
-              <TabsTrigger value="business">Sponsorship Model</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="overview" className="space-y-6">
-              {/* Clan Health Dashboard */}
-              <Card className="bg-gradient-to-r from-primary-100 to-blue-100 border-primary-200">
-                <CardContent className="pt-6">
-                  <h3 className="text-xl font-bold mb-4">Your Branch Performance</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">2nd</div>
-                      <p className="text-sm text-muted-foreground">Education Ranking</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-emerald-600">89%</div>
-                      <p className="text-sm text-muted-foreground">Youth Active</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-ochre-600">156</div>
-                      <p className="text-sm text-muted-foreground">Family Members</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-sienna-600">12</div>
-                      <p className="text-sm text-muted-foreground">Recent Births</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Clan Updates */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                    <span>Recent Clan Milestones</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {clanUpdates.map((update, index) => (
-                      <div key={index} className={`p-4 rounded-lg border-l-4 ${
-                        update.impact === 'high' ? 'border-green-500 bg-green-50' :
-                        update.impact === 'medium' ? 'border-blue-500 bg-blue-50' :
-                        'border-gray-500 bg-gray-50'
-                      }`}>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <Badge variant="outline" className="mb-2">{update.type}</Badge>
-                            <p className="font-medium">{update.title}</p>
-                            <p className="text-sm text-muted-foreground">{update.time}</p>
-                          </div>
-                          <Button size="sm" variant="outline">View Details</Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="updates" className="space-y-6">
-              {/* Clan Health Dashboard */}
-              <Card className="bg-gradient-to-r from-primary-100 to-blue-100 border-primary-200">
-                <CardContent className="pt-6">
-                  <h3 className="text-xl font-bold mb-4">Your Branch Performance</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-primary">2nd</div>
-                      <p className="text-sm text-muted-foreground">Education Ranking</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-emerald-600">89%</div>
-                      <p className="text-sm text-muted-foreground">Youth Active</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-ochre-600">156</div>
-                      <p className="text-sm text-muted-foreground">Family Members</p>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-sienna-600">12</div>
-                      <p className="text-sm text-muted-foreground">Recent Births</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Clan Updates */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                    <span>Recent Clan Milestones</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {clanUpdates.map((update, index) => (
-                      <div key={index} className={`p-4 rounded-lg border-l-4 ${
-                        update.impact === 'high' ? 'border-green-500 bg-green-50' :
-                        update.impact === 'medium' ? 'border-blue-500 bg-blue-50' :
-                        'border-gray-500 bg-gray-50'
-                      }`}>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <Badge variant="outline" className="mb-2">{update.type}</Badge>
-                            <p className="font-medium">{update.title}</p>
-                            <p className="text-sm text-muted-foreground">{update.time}</p>
-                          </div>
-                          <Button size="sm" variant="outline">View Details</Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="support" className="space-y-6">
-              {/* Support Options */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Heart className="w-5 h-5 text-red-500" />
-                    <span>Support Your Family</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Button className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <BookOpen className="w-6 h-6" />
-                      <span>Education Fund</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Heart className="w-6 h-6" />
-                      <span>Health Support</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Users className="w-6 h-6" />
-                      <span>Emergency Aid</span>
-                    </Button>
-                    <Button variant="outline" className="h-24 flex flex-col items-center justify-center space-y-2">
-                      <Coins className="w-6 h-6" />
-                      <span>General Vault</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Contributions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Recent Contributions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-green-50 rounded border-l-4 border-green-500">
-                      <div>
-                        <p className="font-medium">Education support for 3 students</p>
-                        <p className="text-sm text-muted-foreground">Monthly recurring donation</p>
-                      </div>
-                      <span className="font-bold text-green-600">15,000 KSH</span>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded border-l-4 border-blue-500">
-                      <div>
-                        <p className="font-medium">Clinic medicine fund</p>
-                        <p className="text-sm text-muted-foreground">One-time donation</p>
-                      </div>
-                      <span className="font-bold text-blue-600">8,000 KSH</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="participate" className="space-y-6">
-              {/* Live Events */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Video className="w-5 h-5 text-purple-500" />
-                    <span>Live Clan Events</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">Monthly Clan Council Meeting</h4>
-                          <p className="text-sm text-muted-foreground">Discussing youth education initiatives</p>
-                          <Badge className="mt-2 bg-purple-500">Live in 2 hours</Badge>
-                        </div>
-                        <Button>Join Stream</Button>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 bg-gray-50 border rounded-lg">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">Elder Mary's Remembrance Ceremony</h4>
-                          <p className="text-sm text-muted-foreground">Celebrating her contributions to education</p>
-                          <Badge variant="outline" className="mt-2">Tomorrow 3 PM</Badge>
-                        </div>
-                        <Button variant="outline">Set Reminder</Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Mentorship */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Mentorship Opportunities</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Button className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <Users className="w-6 h-6" />
-                      <span>Mentor Youth Members</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center space-y-2">
-                      <BookOpen className="w-6 h-6" />
-                      <span>Career Guidance Sessions</span>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="invest" className="space-y-6">
-              {/* Investment Opportunities */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Vote className="w-5 h-5 text-ochre-500" />
-                    <span>Community Investment Projects</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {investmentOpportunities.map((project, index) => (
-                      <div key={index} className="p-4 border rounded-lg">
-                        <div className="flex justify-between items-start mb-3">
-                          <div className="flex-1">
-                            <h4 className="font-medium">{project.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {project.raised.toLocaleString()} / {project.amount.toLocaleString()} KSH raised
-                            </p>
-                            <p className="text-xs text-muted-foreground">{project.supporters} diaspora supporters</p>
-                          </div>
-                          <div className="text-right">
-                            <Badge className="mb-2">
-                              {Math.round((project.raised / project.amount) * 100)}% funded
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-                          <div 
-                            className="bg-primary h-2 rounded-full" 
-                            style={{ width: `${(project.raised / project.amount) * 100}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button size="sm">Invest & Vote</Button>
-                          <Button size="sm" variant="outline">Learn More</Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Voting Panel */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Active Diaspora Votes</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <Vote className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">No active votes requiring diaspora input</p>
-                    <Button className="mt-4" variant="outline">View Past Decisions</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="business" className="space-y-6">
-              {/* Diaspora Sponsorship Impact */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Sponsorship Impact</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    <div className="text-center p-4 bg-primary-50 rounded-lg">
-                      <div className="text-2xl font-bold text-primary">$2,340</div>
-                      <p className="text-sm text-muted-foreground">Total Contributed</p>
-                    </div>
-                    <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                      <div className="text-2xl font-bold text-emerald-600">23</div>
-                      <p className="text-sm text-muted-foreground">Students Supported</p>
-                    </div>
-                    <div className="text-center p-4 bg-ochre-50 rounded-lg">
-                      <div className="text-2xl font-bold text-ochre-600">5</div>
-                      <p className="text-sm text-muted-foreground">Projects Funded</p>
-                    </div>
-                    <div className="text-center p-4 bg-sienna-50 rounded-lg">
-                      <div className="text-2xl font-bold text-sienna-600">89%</div>
-                      <p className="text-sm text-muted-foreground">Impact Score</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Revenue Source for Clan */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Diaspora Revenue Model</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 bg-gradient-to-r from-primary-100 to-blue-100 rounded-lg">
-                      <h4 className="font-medium mb-2">Monthly Clan Support Plan</h4>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        Your recurring support helps maintain clan digital infrastructure
-                      </p>
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="font-medium">Current Plan:</span> Federation Tier
-                        </div>
-                        <div>
-                          <span className="font-medium">Monthly Cost:</span> $25 (shared)
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-3 border rounded-lg">
-                        <h5 className="font-medium mb-1">Family Dashboard Maintenance</h5>
-                        <p className="text-sm text-muted-foreground">$15/month</p>
-                      </div>
-                      <div className="p-3 border rounded-lg">
-                        <h5 className="font-medium mb-1">Remote Dispute Arbitration</h5>
-                        <p className="text-sm text-muted-foreground">$10/month</p>
-                      </div>
-                      <div className="p-3 border rounded-lg">
-                        <h5 className="font-medium mb-1">Shared Cloud Tree Access</h5>
-                        <p className="text-sm text-muted-foreground">$8/month</p>
-                      </div>
-                      <div className="p-3 border rounded-lg">
-                        <h5 className="font-medium mb-1">Live Ritual Streaming</h5>
-                        <p className="text-sm text-muted-foreground">$12/month</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Global Network Growth */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Global Network Expansion</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-emerald-50 rounded">
-                      <div>
-                        <p className="font-medium">Invite Diaspora Cousins</p>
-                        <p className="text-sm text-muted-foreground">Expand global support network</p>
-                      </div>
-                      <Button size="sm">Send Invites</Button>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-primary-50 rounded">
-                      <div>
-                        <p className="font-medium">Sponsor New Clan Onboarding</p>
-                        <p className="text-sm text-muted-foreground">Help other clans join platform</p>
-                      </div>
-                      <Button size="sm" variant="outline">Sponsor</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
         </div>
       </div>
-    </BusinessModelProvider>
+
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Connection Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {connectionMetrics.map((metric, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
+                    <p className="text-2xl font-bold">{metric.value}</p>
+                  </div>
+                  <metric.icon className={`w-8 h-8 ${metric.color}`} />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Tabs defaultValue="family" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="family">Family Connection</TabsTrigger>
+            <TabsTrigger value="remittances">Remittances</TabsTrigger>
+            <TabsTrigger value="events">Virtual Events</TabsTrigger>
+            <TabsTrigger value="investment">Investment</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="family" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Video className="w-5 h-5" />
+                    <span>Live Family Feed</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm">
+                          MN
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-green-800">Mom is online</h4>
+                          <p className="text-sm text-green-700">Available for video call</p>
+                        </div>
+                      </div>
+                      <Button size="sm" className="mt-2">
+                        <Video className="w-4 h-4 mr-2" />
+                        Call Now
+                      </Button>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Recent Family Updates</h4>
+                      <p className="text-sm text-muted-foreground">Sister graduated from university</p>
+                      <p className="text-sm text-muted-foreground">Uncle's farm had great harvest</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Calendar className="w-5 h-5" />
+                    <span>Upcoming Events</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {upcomingEvents.map((event, index) => (
+                      <div key={index} className="p-3 border rounded-lg">
+                        <h4 className="font-medium">{event.title}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {event.date} at {event.time} • {event.type}
+                        </p>
+                        <Button size="sm" className="mt-2" variant="outline">Join Event</Button>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="remittances" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <DollarSign className="w-5 h-5" />
+                    <span>Send Money Home</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <h4 className="font-medium text-blue-800">Quick Send</h4>
+                      <p className="text-sm text-blue-700">To saved recipients</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Button className="w-full">Send to Family</Button>
+                      <Button variant="outline" className="w-full">Send to Community Project</Button>
+                      <Button variant="outline" className="w-full">Education Fund</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Transactions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {remittanceHistory.map((transaction, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex-1">
+                          <h4 className="font-medium text-sm">{transaction.recipient}</h4>
+                          <p className="text-xs text-muted-foreground">{transaction.purpose}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">{transaction.amount}</p>
+                          <p className="text-xs text-muted-foreground">{transaction.date}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="events" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Video className="w-5 h-5" />
+                  <span>Virtual Community Center</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium">Live Streams</h4>
+                    <p className="text-sm text-muted-foreground">Community events happening now</p>
+                    <Button size="sm" className="mt-2">Join Live Stream</Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium">Cultural Workshops</h4>
+                    <p className="text-sm text-muted-foreground">Learn traditional practices</p>
+                    <Button size="sm" className="mt-2" variant="outline">Browse Workshops</Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium">Youth Mentorship</h4>
+                    <p className="text-sm text-muted-foreground">Guide the next generation</p>
+                    <Button size="sm" className="mt-2" variant="outline">Become Mentor</Button>
+                  </div>
+                  <div className="p-4 border rounded-lg">
+                    <h4 className="font-medium">Investment Circles</h4>
+                    <p className="text-sm text-muted-foreground">Collaborative funding</p>
+                    <Button size="sm" className="mt-2" variant="outline">Join Circle</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="investment" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Plane className="w-5 h-5" />
+                    <span>Investment Opportunities</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Agricultural Cooperative</h4>
+                      <p className="text-sm text-muted-foreground">Expected ROI: 12% annually</p>
+                      <Button size="sm" className="mt-2" variant="outline">Learn More</Button>
+                    </div>
+                    <div className="p-3 border rounded-lg">
+                      <h4 className="font-medium">Tech Startup Fund</h4>
+                      <p className="text-sm text-muted-foreground">Supporting local innovation</p>
+                      <Button size="sm" className="mt-2" variant="outline">Invest</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Heart className="w-5 h-5" />
+                    <span>Community Impact</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                      <h4 className="font-medium text-green-800">Your Impact</h4>
+                      <p className="text-sm text-green-700">5 families supported this year</p>
+                      <p className="text-sm text-green-700">2 students sponsored</p>
+                    </div>
+                    <Button className="w-full">View Impact Report</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
   );
 };

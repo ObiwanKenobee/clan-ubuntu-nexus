@@ -1,8 +1,9 @@
 
-import { WomenDashboard } from '@/components/dashboards/WomenDashboard';
+import React from 'react';
+import { WomenDashboard as WomenDashboardComponent } from '@/components/dashboards/WomenDashboard';
 
-const WomenDashboardPage = () => {
-  return <WomenDashboard />;
+const WomenDashboard = () => {
+  return <WomenDashboardComponent />;
 };
 
-export default WomenDashboardPage;
+export default WomenDashboard;

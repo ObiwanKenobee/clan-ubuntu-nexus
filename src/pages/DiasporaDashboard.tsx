@@ -1,8 +1,9 @@
 
-import { DiasporaDashboard } from '@/components/dashboards/DiasporaDashboard';
+import React from 'react';
+import { DiasporaDashboard as DiasporaDashboardComponent } from '@/components/dashboards/DiasporaDashboard';
 
-const DiasporaDashboardPage = () => {
-  return <DiasporaDashboard />;
+const DiasporaDashboard = () => {
+  return <DiasporaDashboardComponent />;
 };
 
-export default DiasporaDashboardPage;
+export default DiasporaDashboard;
