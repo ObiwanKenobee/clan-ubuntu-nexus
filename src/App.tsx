@@ -1,57 +1,45 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { BusinessModelProvider } from "@/contexts/BusinessModelContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
+import DataExplorer from "./pages/DataExplorer";
 import ElderDashboard from "./pages/ElderDashboard";
 import YouthDashboard from "./pages/YouthDashboard";
 import WomenDashboard from "./pages/WomenDashboard";
 import DiasporaDashboard from "./pages/DiasporaDashboard";
-import SuperTechDashboard from "./pages/SuperTechDashboard";
+import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 3,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <BusinessModelProvider>
+        <AuthProvider>
           <TooltipProvider>
             <Toaster />
-            <Sonner />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/data-explorer" element={<DataExplorer />} />
                 <Route path="/elder-dashboard" element={<ElderDashboard />} />
                 <Route path="/youth-dashboard" element={<YouthDashboard />} />
                 <Route path="/women-dashboard" element={<WomenDashboard />} />
                 <Route path="/diaspora-dashboard" element={<DiasporaDashboard />} />
-                <Route path="/super-tech" element={<SuperTechDashboard />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>
-        </BusinessModelProvider>
+        </AuthProvider>
       </LanguageProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+    </QueryClientProvider>
+  );
+}
 
 export default App;
