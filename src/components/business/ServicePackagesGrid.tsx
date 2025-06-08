@@ -41,7 +41,20 @@ export const ServicePackagesGrid = () => {
         .order('price_monthly');
 
       if (error) throw error;
-      setPackages(data || []);
+      
+      // Transform the data to match our interface
+      const transformedPackages: ServicePackage[] = (data || []).map(pkg => ({
+        id: pkg.id,
+        name: pkg.name,
+        description: pkg.description || '',
+        price_monthly: pkg.price_monthly,
+        price_yearly: pkg.price_yearly || 0,
+        features: Array.isArray(pkg.features) ? pkg.features : [],
+        limitations: Array.isArray(pkg.limitations) ? pkg.limitations : [],
+        is_popular: pkg.is_popular
+      }));
+      
+      setPackages(transformedPackages);
     } catch (error) {
       console.error('Error fetching packages:', error);
     } finally {
