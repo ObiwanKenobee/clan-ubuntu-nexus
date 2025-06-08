@@ -121,6 +121,54 @@ export type Database = {
           },
         ]
       }
+      analytics_engines: {
+        Row: {
+          analyst_id: string
+          automation_level: string | null
+          created_at: string | null
+          data_sources: Json | null
+          engine_name: string
+          id: string
+          output_formats: Json | null
+          performance_metrics: Json | null
+          predictive_models: Json | null
+          processing_algorithms: Json | null
+          real_time_capabilities: boolean | null
+          updated_at: string | null
+          visualization_types: Json | null
+        }
+        Insert: {
+          analyst_id: string
+          automation_level?: string | null
+          created_at?: string | null
+          data_sources?: Json | null
+          engine_name: string
+          id?: string
+          output_formats?: Json | null
+          performance_metrics?: Json | null
+          predictive_models?: Json | null
+          processing_algorithms?: Json | null
+          real_time_capabilities?: boolean | null
+          updated_at?: string | null
+          visualization_types?: Json | null
+        }
+        Update: {
+          analyst_id?: string
+          automation_level?: string | null
+          created_at?: string | null
+          data_sources?: Json | null
+          engine_name?: string
+          id?: string
+          output_formats?: Json | null
+          performance_metrics?: Json | null
+          predictive_models?: Json | null
+          processing_algorithms?: Json | null
+          real_time_capabilities?: boolean | null
+          updated_at?: string | null
+          visualization_types?: Json | null
+        }
+        Relationships: []
+      }
       analytics_metrics: {
         Row: {
           id: string
@@ -178,6 +226,96 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      archetype_interactions: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string
+          energy_cost: number | null
+          id: string
+          interaction_type: string
+          potential_outcome: string | null
+          primary_archetype: string
+          results: Json | null
+          success_probability: number | null
+          target_archetype: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          energy_cost?: number | null
+          id?: string
+          interaction_type: string
+          potential_outcome?: string | null
+          primary_archetype: string
+          results?: Json | null
+          success_probability?: number | null
+          target_archetype: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          energy_cost?: number | null
+          id?: string
+          interaction_type?: string
+          potential_outcome?: string | null
+          primary_archetype?: string
+          results?: Json | null
+          success_probability?: number | null
+          target_archetype?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      archetype_synergies: {
+        Row: {
+          archetype_from: string
+          archetype_to: string
+          benefits: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          multiplier: number | null
+          strength_score: number | null
+          synergy_type: string
+          unlock_conditions: Json | null
+          unlocked: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          archetype_from: string
+          archetype_to: string
+          benefits?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          multiplier?: number | null
+          strength_score?: number | null
+          synergy_type: string
+          unlock_conditions?: Json | null
+          unlocked?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          archetype_from?: string
+          archetype_to?: string
+          benefits?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          multiplier?: number | null
+          strength_score?: number | null
+          synergy_type?: string
+          unlock_conditions?: Json | null
+          unlocked?: boolean | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -278,6 +416,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      blockchain_innovations: {
+        Row: {
+          audit_status: string | null
+          blockchain_network: string | null
+          category: string | null
+          community_adoption: Json | null
+          created_at: string | null
+          deployment_stage: string | null
+          developer_id: string
+          economic_model: Json | null
+          governance_structure: Json | null
+          id: string
+          innovation_name: string
+          technical_specs: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          audit_status?: string | null
+          blockchain_network?: string | null
+          category?: string | null
+          community_adoption?: Json | null
+          created_at?: string | null
+          deployment_stage?: string | null
+          developer_id: string
+          economic_model?: Json | null
+          governance_structure?: Json | null
+          id?: string
+          innovation_name: string
+          technical_specs?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          audit_status?: string | null
+          blockchain_network?: string | null
+          category?: string | null
+          community_adoption?: Json | null
+          created_at?: string | null
+          deployment_stage?: string | null
+          developer_id?: string
+          economic_model?: Json | null
+          governance_structure?: Json | null
+          id?: string
+          innovation_name?: string
+          technical_specs?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       carbon_footprint_data: {
         Row: {
@@ -399,6 +585,57 @@ export type Database = {
           partner_id?: string
           timestamp?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      communication_channels: {
+        Row: {
+          ai_moderation: boolean | null
+          archetype_restrictions:
+            | Database["public"]["Enums"]["user_archetype"][]
+            | null
+          channel_type: string | null
+          created_at: string | null
+          created_by: string | null
+          encryption_level: string | null
+          id: string
+          name: string
+          participants: string[] | null
+          real_time_translation: boolean | null
+          sentiment_analysis: boolean | null
+          updated_at: string | null
+        }
+        Insert: {
+          ai_moderation?: boolean | null
+          archetype_restrictions?:
+            | Database["public"]["Enums"]["user_archetype"][]
+            | null
+          channel_type?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          encryption_level?: string | null
+          id?: string
+          name: string
+          participants?: string[] | null
+          real_time_translation?: boolean | null
+          sentiment_analysis?: boolean | null
+          updated_at?: string | null
+        }
+        Update: {
+          ai_moderation?: boolean | null
+          archetype_restrictions?:
+            | Database["public"]["Enums"]["user_archetype"][]
+            | null
+          channel_type?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          encryption_level?: string | null
+          id?: string
+          name?: string
+          participants?: string[] | null
+          real_time_translation?: boolean | null
+          sentiment_analysis?: boolean | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -743,6 +980,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      emergent_innovations: {
+        Row: {
+          contributing_archetypes: string[] | null
+          created_at: string
+          cross_archetype_bonus: number | null
+          current_resources: string[] | null
+          description: string | null
+          emergence_metrics: Json | null
+          id: string
+          impact_potential: number | null
+          initiated_by: string
+          last_activity: string
+          participants: Json | null
+          required_resources: string[] | null
+          stage: string
+          synergies: Json | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          contributing_archetypes?: string[] | null
+          created_at?: string
+          cross_archetype_bonus?: number | null
+          current_resources?: string[] | null
+          description?: string | null
+          emergence_metrics?: Json | null
+          id?: string
+          impact_potential?: number | null
+          initiated_by: string
+          last_activity?: string
+          participants?: Json | null
+          required_resources?: string[] | null
+          stage?: string
+          synergies?: Json | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          contributing_archetypes?: string[] | null
+          created_at?: string
+          cross_archetype_bonus?: number | null
+          current_resources?: string[] | null
+          description?: string | null
+          emergence_metrics?: Json | null
+          id?: string
+          impact_potential?: number | null
+          initiated_by?: string
+          last_activity?: string
+          participants?: Json | null
+          required_resources?: string[] | null
+          stage?: string
+          synergies?: Json | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       esg_benchmarks: {
         Row: {
@@ -1176,6 +1470,60 @@ export type Database = {
         }
         Relationships: []
       }
+      exponential_architectures: {
+        Row: {
+          archetype: string
+          architecture_type: string
+          cascade_effects: Json | null
+          created_at: string
+          description: string | null
+          emergence_patterns: Json | null
+          id: string
+          impact_multiplier: number | null
+          implementation_status: string | null
+          network_effects: Json | null
+          scaling_metrics: Json | null
+          title: string
+          updated_at: string
+          user_id: string
+          viral_mechanisms: Json | null
+        }
+        Insert: {
+          archetype: string
+          architecture_type: string
+          cascade_effects?: Json | null
+          created_at?: string
+          description?: string | null
+          emergence_patterns?: Json | null
+          id?: string
+          impact_multiplier?: number | null
+          implementation_status?: string | null
+          network_effects?: Json | null
+          scaling_metrics?: Json | null
+          title: string
+          updated_at?: string
+          user_id: string
+          viral_mechanisms?: Json | null
+        }
+        Update: {
+          archetype?: string
+          architecture_type?: string
+          cascade_effects?: Json | null
+          created_at?: string
+          description?: string | null
+          emergence_patterns?: Json | null
+          id?: string
+          impact_multiplier?: number | null
+          implementation_status?: string | null
+          network_effects?: Json | null
+          scaling_metrics?: Json | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          viral_mechanisms?: Json | null
+        }
+        Relationships: []
+      }
       forum_posts: {
         Row: {
           author_id: string
@@ -1460,6 +1808,60 @@ export type Database = {
         }
         Relationships: []
       }
+      innovation_pipeline: {
+        Row: {
+          business_viability: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          impact_assessment: Json | null
+          innovation_title: string
+          innovator_id: string
+          market_potential: Json | null
+          resource_requirements: Json | null
+          stage: string | null
+          stakeholders: string[] | null
+          technical_feasibility: number | null
+          technology_stack: Json | null
+          timeline: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          business_viability?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          impact_assessment?: Json | null
+          innovation_title: string
+          innovator_id: string
+          market_potential?: Json | null
+          resource_requirements?: Json | null
+          stage?: string | null
+          stakeholders?: string[] | null
+          technical_feasibility?: number | null
+          technology_stack?: Json | null
+          timeline?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          business_viability?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          impact_assessment?: Json | null
+          innovation_title?: string
+          innovator_id?: string
+          market_potential?: Json | null
+          resource_requirements?: Json | null
+          stage?: string | null
+          stakeholders?: string[] | null
+          technical_feasibility?: number | null
+          technology_stack?: Json | null
+          timeline?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       integration_logs: {
         Row: {
           created_at: string
@@ -1498,6 +1900,140 @@ export type Database = {
           },
         ]
       }
+      interaction_sessions: {
+        Row: {
+          ai_insights: Json | null
+          biometric_data: Json | null
+          created_at: string | null
+          end_time: string | null
+          id: string
+          interaction_data: Json | null
+          performance_metrics: Json | null
+          session_type: Database["public"]["Enums"]["interaction_type"]
+          start_time: string | null
+          user_id: string
+          workspace_id: string | null
+        }
+        Insert: {
+          ai_insights?: Json | null
+          biometric_data?: Json | null
+          created_at?: string | null
+          end_time?: string | null
+          id?: string
+          interaction_data?: Json | null
+          performance_metrics?: Json | null
+          session_type: Database["public"]["Enums"]["interaction_type"]
+          start_time?: string | null
+          user_id: string
+          workspace_id?: string | null
+        }
+        Update: {
+          ai_insights?: Json | null
+          biometric_data?: Json | null
+          created_at?: string | null
+          end_time?: string | null
+          id?: string
+          interaction_data?: Json | null
+          performance_metrics?: Json | null
+          session_type?: Database["public"]["Enums"]["interaction_type"]
+          start_time?: string | null
+          user_id?: string
+          workspace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interaction_sessions_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspace_environments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_nodes: {
+        Row: {
+          category: string | null
+          confidence_score: number | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          entity_type: string | null
+          id: string
+          metadata: Json | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          entity_type?: string | null
+          id?: string
+          metadata?: Json | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      knowledge_relationships: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          relationship_type: string | null
+          source_node_id: string
+          strength: number | null
+          target_node_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          relationship_type?: string | null
+          source_node_id: string
+          strength?: number | null
+          target_node_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          relationship_type?: string | null
+          source_node_id?: string
+          strength?: number | null
+          target_node_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_relationships_source_node_id_fkey"
+            columns: ["source_node_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_nodes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_relationships_target_node_id_fkey"
+            columns: ["target_node_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_nodes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           attachment_url: string | null
@@ -1527,6 +2063,65 @@ export type Database = {
           thread_id?: string
         }
         Relationships: []
+      }
+      ml_experiments: {
+        Row: {
+          completed_at: string | null
+          compute_resources: Json | null
+          cost_estimate: number | null
+          created_at: string | null
+          dataset_info: Json | null
+          experiment_name: string
+          hypothesis: string | null
+          id: string
+          model_id: string | null
+          parameters: Json | null
+          researcher_id: string
+          results: Json | null
+          started_at: string | null
+          status: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          compute_resources?: Json | null
+          cost_estimate?: number | null
+          created_at?: string | null
+          dataset_info?: Json | null
+          experiment_name: string
+          hypothesis?: string | null
+          id?: string
+          model_id?: string | null
+          parameters?: Json | null
+          researcher_id: string
+          results?: Json | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          compute_resources?: Json | null
+          cost_estimate?: number | null
+          created_at?: string | null
+          dataset_info?: Json | null
+          experiment_name?: string
+          hypothesis?: string | null
+          id?: string
+          model_id?: string | null
+          parameters?: Json | null
+          researcher_id?: string
+          results?: Json | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ml_experiments_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "ai_models"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       newsletter_subscribers: {
         Row: {
@@ -1842,6 +2437,53 @@ export type Database = {
           },
         ]
       }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          external_payment_id: string
+          id: string
+          metadata: Json | null
+          payment_date: string
+          payment_provider: Database["public"]["Enums"]["payment_provider"]
+          status: string
+          subscription_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          external_payment_id: string
+          id?: string
+          metadata?: Json | null
+          payment_date?: string
+          payment_provider: Database["public"]["Enums"]["payment_provider"]
+          status: string
+          subscription_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          external_payment_id?: string
+          id?: string
+          metadata?: Json | null
+          payment_date?: string
+          payment_provider?: Database["public"]["Enums"]["payment_provider"]
+          status?: string
+          subscription_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plan_features: {
         Row: {
           created_at: string | null
@@ -1860,6 +2502,51 @@ export type Database = {
           feature?: string
           id?: string
           plan?: string
+        }
+        Relationships: []
+      }
+      platform_collaborations: {
+        Row: {
+          collaboration_type: string
+          created_at: string
+          duration: number | null
+          energy_generated: number | null
+          id: string
+          metadata: Json | null
+          new_connections_formed: number | null
+          outcomes: string[] | null
+          participants: string[] | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          collaboration_type: string
+          created_at?: string
+          duration?: number | null
+          energy_generated?: number | null
+          id?: string
+          metadata?: Json | null
+          new_connections_formed?: number | null
+          outcomes?: string[] | null
+          participants?: string[] | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          collaboration_type?: string
+          created_at?: string
+          duration?: number | null
+          energy_generated?: number | null
+          id?: string
+          metadata?: Json | null
+          new_connections_formed?: number | null
+          outcomes?: string[] | null
+          participants?: string[] | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -2065,6 +2752,59 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      project_collaborations: {
+        Row: {
+          access_level: string | null
+          collaboration_tools: Json | null
+          collaborator_id: string
+          contribution_type: string | null
+          created_at: string | null
+          ended_at: string | null
+          id: string
+          performance_rating: number | null
+          project_id: string
+          role_in_project: string
+          started_at: string | null
+          time_allocation: number | null
+        }
+        Insert: {
+          access_level?: string | null
+          collaboration_tools?: Json | null
+          collaborator_id: string
+          contribution_type?: string | null
+          created_at?: string | null
+          ended_at?: string | null
+          id?: string
+          performance_rating?: number | null
+          project_id: string
+          role_in_project: string
+          started_at?: string | null
+          time_allocation?: number | null
+        }
+        Update: {
+          access_level?: string | null
+          collaboration_tools?: Json | null
+          collaborator_id?: string
+          contribution_type?: string | null
+          created_at?: string | null
+          ended_at?: string | null
+          id?: string
+          performance_rating?: number | null
+          project_id?: string
+          role_in_project?: string
+          started_at?: string | null
+          time_allocation?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_collaborations_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       projects: {
         Row: {
@@ -2475,6 +3215,51 @@ export type Database = {
         }
         Relationships: []
       }
+      security_protocols: {
+        Row: {
+          compliance_frameworks: Json | null
+          created_at: string | null
+          deployment_status: string | null
+          id: string
+          implementation_details: Json | null
+          last_audit: string | null
+          protocol_name: string
+          protocol_type: string | null
+          security_architect_id: string
+          testing_results: Json | null
+          threat_level: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          compliance_frameworks?: Json | null
+          created_at?: string | null
+          deployment_status?: string | null
+          id?: string
+          implementation_details?: Json | null
+          last_audit?: string | null
+          protocol_name: string
+          protocol_type?: string | null
+          security_architect_id: string
+          testing_results?: Json | null
+          threat_level?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          compliance_frameworks?: Json | null
+          created_at?: string | null
+          deployment_status?: string | null
+          id?: string
+          implementation_details?: Json | null
+          last_audit?: string | null
+          protocol_name?: string
+          protocol_type?: string | null
+          security_architect_id?: string
+          testing_results?: Json | null
+          threat_level?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       sensor_metrics: {
         Row: {
           alert_count: number
@@ -2505,6 +3290,48 @@ export type Database = {
           timestamp?: string
           uptime_percentage?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      service_packages: {
+        Row: {
+          created_at: string
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          is_popular: boolean | null
+          limitations: Json | null
+          name: string
+          price_monthly: number
+          price_yearly: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_popular?: boolean | null
+          limitations?: Json | null
+          name: string
+          price_monthly: number
+          price_yearly?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_popular?: boolean | null
+          limitations?: Json | null
+          name?: string
+          price_monthly?: number
+          price_yearly?: number | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -2564,6 +3391,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          external_subscription_id: string | null
+          id: string
+          package_id: string
+          payment_provider: Database["public"]["Enums"]["payment_provider"]
+          status: Database["public"]["Enums"]["subscription_status"]
+          trial_end: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          package_id: string
+          payment_provider: Database["public"]["Enums"]["payment_provider"]
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_end?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          package_id?: string
+          payment_provider?: Database["public"]["Enums"]["payment_provider"]
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscriptions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "service_packages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       supplier_assessments: {
         Row: {
@@ -3015,27 +3892,54 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          archetype: Database["public"]["Enums"]["user_archetype"] | null
+          certification_levels: Json | null
+          collaboration_score: number | null
           created_at: string | null
           id: string
+          innovation_index: number | null
+          interaction_preferences:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
           name: string
           organization: string | null
+          productivity_metrics: Json | null
           role: string
+          skill_matrix: Json | null
           updated_at: string | null
         }
         Insert: {
+          archetype?: Database["public"]["Enums"]["user_archetype"] | null
+          certification_levels?: Json | null
+          collaboration_score?: number | null
           created_at?: string | null
           id: string
+          innovation_index?: number | null
+          interaction_preferences?:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
           name: string
           organization?: string | null
+          productivity_metrics?: Json | null
           role: string
+          skill_matrix?: Json | null
           updated_at?: string | null
         }
         Update: {
+          archetype?: Database["public"]["Enums"]["user_archetype"] | null
+          certification_levels?: Json | null
+          collaboration_score?: number | null
           created_at?: string | null
           id?: string
+          innovation_index?: number | null
+          interaction_preferences?:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
           name?: string
           organization?: string | null
+          productivity_metrics?: Json | null
           role?: string
+          skill_matrix?: Json | null
           updated_at?: string | null
         }
         Relationships: []
@@ -3202,6 +4106,51 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      workspace_environments: {
+        Row: {
+          archetype: Database["public"]["Enums"]["user_archetype"]
+          capabilities: Json | null
+          created_at: string | null
+          environment_type: string | null
+          hardware_requirements: Json | null
+          id: string
+          interaction_modes:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
+          name: string
+          software_stack: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          archetype: Database["public"]["Enums"]["user_archetype"]
+          capabilities?: Json | null
+          created_at?: string | null
+          environment_type?: string | null
+          hardware_requirements?: Json | null
+          id?: string
+          interaction_modes?:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
+          name: string
+          software_stack?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          archetype?: Database["public"]["Enums"]["user_archetype"]
+          capabilities?: Json | null
+          created_at?: string | null
+          environment_type?: string | null
+          hardware_requirements?: Json | null
+          id?: string
+          interaction_modes?:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
+          name?: string
+          software_stack?: Json | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -3719,11 +4668,20 @@ export type Database = {
       get_user_profile: {
         Args: { user_id: string }
         Returns: {
+          archetype: Database["public"]["Enums"]["user_archetype"] | null
+          certification_levels: Json | null
+          collaboration_score: number | null
           created_at: string | null
           id: string
+          innovation_index: number | null
+          interaction_preferences:
+            | Database["public"]["Enums"]["interaction_type"][]
+            | null
           name: string
           organization: string | null
+          productivity_metrics: Json | null
           role: string
+          skill_matrix: Json | null
           updated_at: string | null
         }[]
       }
@@ -5064,9 +6022,22 @@ export type Database = {
         | "dreamer"
       integration_status: "active" | "inactive" | "error" | "pending"
       integration_type: "erp" | "crm" | "scm" | "hrm" | "custom"
+      interaction_type:
+        | "voice_command"
+        | "gesture_control"
+        | "brain_interface"
+        | "ar_interaction"
+        | "holographic_display"
+        | "haptic_feedback"
+        | "eye_tracking"
+        | "ai_assistant"
+        | "collaborative_whiteboard"
+        | "immersive_vr"
+        | "predictive_interface"
       metric_type: "wildlife" | "supply_chain" | "sensor" | "collaboration"
       partner_status: "active" | "inactive" | "pending"
       partnership_type: "technology" | "consulting" | "research" | "other"
+      payment_provider: "paystack" | "paypal" | "stripe"
       policy_category:
         | "compliance"
         | "security"
@@ -5087,8 +6058,33 @@ export type Database = {
         | "other"
       security_incident_status: "open" | "investigating" | "resolved" | "closed"
       security_severity: "low" | "medium" | "high" | "critical"
+      subscription_status:
+        | "active"
+        | "cancelled"
+        | "expired"
+        | "pending"
+        | "failed"
       supplier_status: "pending" | "approved" | "at_risk" | "suspended"
       task_status: "todo" | "in_progress" | "done"
+      user_archetype:
+        | "visionary_ceo"
+        | "technical_cto"
+        | "data_scientist"
+        | "ai_researcher"
+        | "blockchain_developer"
+        | "security_architect"
+        | "product_manager"
+        | "ux_designer"
+        | "devops_engineer"
+        | "compliance_officer"
+        | "sales_director"
+        | "marketing_strategist"
+        | "customer_success"
+        | "finance_controller"
+        | "operations_manager"
+        | "hr_specialist"
+        | "legal_counsel"
+        | "investor_relations"
       user_role:
         | "Supply Chain Manager"
         | "ESG Officer"
@@ -5254,9 +6250,23 @@ export const Constants = {
       ],
       integration_status: ["active", "inactive", "error", "pending"],
       integration_type: ["erp", "crm", "scm", "hrm", "custom"],
+      interaction_type: [
+        "voice_command",
+        "gesture_control",
+        "brain_interface",
+        "ar_interaction",
+        "holographic_display",
+        "haptic_feedback",
+        "eye_tracking",
+        "ai_assistant",
+        "collaborative_whiteboard",
+        "immersive_vr",
+        "predictive_interface",
+      ],
       metric_type: ["wildlife", "supply_chain", "sensor", "collaboration"],
       partner_status: ["active", "inactive", "pending"],
       partnership_type: ["technology", "consulting", "research", "other"],
+      payment_provider: ["paystack", "paypal", "stripe"],
       policy_category: [
         "compliance",
         "security",
@@ -5279,8 +6289,35 @@ export const Constants = {
       ],
       security_incident_status: ["open", "investigating", "resolved", "closed"],
       security_severity: ["low", "medium", "high", "critical"],
+      subscription_status: [
+        "active",
+        "cancelled",
+        "expired",
+        "pending",
+        "failed",
+      ],
       supplier_status: ["pending", "approved", "at_risk", "suspended"],
       task_status: ["todo", "in_progress", "done"],
+      user_archetype: [
+        "visionary_ceo",
+        "technical_cto",
+        "data_scientist",
+        "ai_researcher",
+        "blockchain_developer",
+        "security_architect",
+        "product_manager",
+        "ux_designer",
+        "devops_engineer",
+        "compliance_officer",
+        "sales_director",
+        "marketing_strategist",
+        "customer_success",
+        "finance_controller",
+        "operations_manager",
+        "hr_specialist",
+        "legal_counsel",
+        "investor_relations",
+      ],
       user_role: [
         "Supply Chain Manager",
         "ESG Officer",
