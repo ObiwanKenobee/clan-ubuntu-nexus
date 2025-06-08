@@ -42,15 +42,15 @@ export const ServicePackagesGrid = () => {
 
       if (error) throw error;
       
-      // Transform the data to match our interface
+      // Transform the data to match our interface with proper type conversion
       const transformedPackages: ServicePackage[] = (data || []).map(pkg => ({
         id: pkg.id,
         name: pkg.name,
         description: pkg.description || '',
         price_monthly: pkg.price_monthly,
         price_yearly: pkg.price_yearly || 0,
-        features: Array.isArray(pkg.features) ? pkg.features : [],
-        limitations: Array.isArray(pkg.limitations) ? pkg.limitations : [],
+        features: Array.isArray(pkg.features) ? pkg.features.map(f => String(f)) : [],
+        limitations: Array.isArray(pkg.limitations) ? pkg.limitations.map(l => String(l)) : [],
         is_popular: pkg.is_popular
       }));
       
