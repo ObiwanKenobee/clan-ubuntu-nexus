@@ -17,7 +17,7 @@ class SuperAdminAPI {
       headers: {
         'Authorization': `Bearer ${session.access_token}`,
         'Content-Type': 'application/json',
-        ...options.headers,
+        ...(options.headers as Record<string, string>),
       },
     });
 
