@@ -1,32 +1,6 @@
 
 import { ApiResponse, Rite, PaginatedResponse } from '@/types/clanTypes';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-
-const apiCall = async <T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
-      ...options,
-    });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      return { success: false, error: data.message || 'API call failed' };
-    }
-
-    return { success: true, data };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
-  }
-};
+import { API_CONFIG, apiRequest, buildApiUrl } from '@/config/api';
 
 // Rites Management
 export const getRitesByClan = async (
@@ -38,14 +12,14 @@ export const getRitesByClan = async (
   const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
   if (type) params.append('type', type);
   
-  return apiCall<PaginatedResponse<Rite>>(`/clans/${clanId}/rites?${params}`);
+  return apiRequest<PaginatedResponse<Rite>>(`${API_CONFIG.ENDPOINTS.CLANS}/${clanId}/rites?${params}`);
 };
 
 export const createRite = async (
   clanId: string, 
   riteData: Omit<Rite, 'rite_id'>
 ): Promise<ApiResponse<Rite>> => {
-  return apiCall<Rite>(`/clans/${clanId}/rites`, {
+  return apiRequest<Rite>(`${API_CONFIG.ENDPOINTS.CLANS}/${clanId}/rites`, {
     method: 'POST',
     body: JSON.stringify(riteData),
   });
@@ -55,7 +29,7 @@ export const updateRite = async (
   riteId: string, 
   updates: Partial<Rite>
 ): Promise<ApiResponse<Rite>> => {
-  return apiCall<Rite>(`/rites/${riteId}`, {
+  return apiRequest<Rite>(`${API_CONFIG.ENDPOINTS.RITES}/${riteId}`, {
     method: 'PATCH',
     body: JSON.stringify(updates),
   });
@@ -71,9 +45,13 @@ export const uploadRiteMedia = async (
   formData.append('type', mediaType);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/rites/${riteId}/media`, {
+    const token = localStorage.getItem('auth_token');
+    const response = await fetch(buildApiUrl(`${API_CONFIG.ENDPOINTS.RITES}/${riteId}/media`), {
       method: 'POST',
       body: formData,
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     });
 
     const data = await response.json();
@@ -92,14 +70,14 @@ export const uploadRiteMedia = async (
 };
 
 export const getRiteById = async (riteId: string): Promise<ApiResponse<Rite>> => {
-  return apiCall<Rite>(`/rites/${riteId}`);
+  return apiRequest<Rite>(`${API_CONFIG.ENDPOINTS.RITES}/${riteId}`);
 };
 
 export const scheduleRite = async (
   clanId: string,
   riteData: Omit<Rite, 'rite_id' | 'status'> & { status: 'planned' }
 ): Promise<ApiResponse<Rite>> => {
-  return apiCall<Rite>(`/clans/${clanId}/rites/schedule`, {
+  return apiRequest<Rite>(`${API_CONFIG.ENDPOINTS.CLANS}/${clanId}/rites/schedule`, {
     method: 'POST',
     body: JSON.stringify(riteData),
   });

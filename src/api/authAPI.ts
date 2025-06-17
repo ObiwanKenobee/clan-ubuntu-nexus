@@ -1,7 +1,6 @@
 
 import { ApiResponse, Member } from '@/types/clanTypes';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+import { API_CONFIG, apiRequest } from '@/config/api';
 
 interface LoginCredentials {
   email: string;
@@ -22,36 +21,9 @@ interface AuthResponse {
   expires_at: string;
 }
 
-const apiCall = async <T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> => {
-  try {
-    const token = localStorage.getItem('auth_token');
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...options?.headers,
-      },
-      ...options,
-    });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      return { success: false, error: data.message || 'API call failed' };
-    }
-
-    return { success: true, data };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-    };
-  }
-};
-
 // Authentication
 export const login = async (credentials: LoginCredentials): Promise<ApiResponse<AuthResponse>> => {
-  const response = await apiCall<AuthResponse>('/auth/login', {
+  const response = await apiRequest<AuthResponse>(`${API_CONFIG.ENDPOINTS.AUTH}/login`, {
     method: 'POST',
     body: JSON.stringify(credentials),
   });
@@ -65,7 +37,7 @@ export const login = async (credentials: LoginCredentials): Promise<ApiResponse<
 };
 
 export const register = async (userData: RegisterData): Promise<ApiResponse<AuthResponse>> => {
-  const response = await apiCall<AuthResponse>('/auth/register', {
+  const response = await apiRequest<AuthResponse>(`${API_CONFIG.ENDPOINTS.AUTH}/register`, {
     method: 'POST',
     body: JSON.stringify(userData),
   });
@@ -81,15 +53,15 @@ export const register = async (userData: RegisterData): Promise<ApiResponse<Auth
 export const logout = async (): Promise<void> => {
   localStorage.removeItem('auth_token');
   localStorage.removeItem('user_data');
-  await apiCall('/auth/logout', { method: 'POST' });
+  await apiRequest(`${API_CONFIG.ENDPOINTS.AUTH}/logout`, { method: 'POST' });
 };
 
 export const getCurrentUser = async (): Promise<ApiResponse<Member>> => {
-  return apiCall<Member>('/auth/me');
+  return apiRequest<Member>(`${API_CONFIG.ENDPOINTS.AUTH}/me`);
 };
 
 export const refreshToken = async (): Promise<ApiResponse<{ token: string; expires_at: string }>> => {
-  const response = await apiCall<{ token: string; expires_at: string }>('/auth/refresh', {
+  const response = await apiRequest<{ token: string; expires_at: string }>(`${API_CONFIG.ENDPOINTS.AUTH}/refresh`, {
     method: 'POST',
   });
 
@@ -101,7 +73,7 @@ export const refreshToken = async (): Promise<ApiResponse<{ token: string; expir
 };
 
 export const updateProfile = async (updates: Partial<Member>): Promise<ApiResponse<Member>> => {
-  const response = await apiCall<Member>('/auth/profile', {
+  const response = await apiRequest<Member>(`${API_CONFIG.ENDPOINTS.AUTH}/profile`, {
     method: 'PATCH',
     body: JSON.stringify(updates),
   });
@@ -114,7 +86,7 @@ export const updateProfile = async (updates: Partial<Member>): Promise<ApiRespon
 };
 
 export const changePassword = async (currentPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
-  return apiCall('/auth/change-password', {
+  return apiRequest(`${API_CONFIG.ENDPOINTS.AUTH}/change-password`, {
     method: 'POST',
     body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
   });

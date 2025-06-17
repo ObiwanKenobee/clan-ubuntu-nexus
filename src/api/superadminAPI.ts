@@ -1,5 +1,5 @@
-
 import { supabase } from '@/integrations/supabase/client';
+import { API_CONFIG } from '@/config/api';
 
 const SUPERADMIN_API_BASE = '/functions/v1/superadmin-api';
 
@@ -11,7 +11,6 @@ class SuperAdminAPI {
       throw new Error('Authentication required');
     }
 
-    const url = `${SUPERADMIN_API_BASE}/${endpoint}`;
     const response = await supabase.functions.invoke('superadmin-api', {
       body: options.body ? JSON.parse(options.body as string) : undefined,
       headers: {
